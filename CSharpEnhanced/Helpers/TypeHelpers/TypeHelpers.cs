@@ -15,6 +15,6 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="toCheck"></param>
 		/// <param name="baseType"></param>
 		/// <returns></returns>
-		public static bool IsDerivedOrSelf(Type toCheck, Type baseType) => toCheck.IsSubclassOf(baseType) || toCheck == baseType;
+		public static bool IsDerivedOrSelf(this Type toCheck, Type baseType) => toCheck.IsSubclassOf(baseType) || toCheck == baseType;
 	}
 }
