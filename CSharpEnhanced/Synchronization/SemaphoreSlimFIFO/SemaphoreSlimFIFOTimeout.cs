@@ -62,6 +62,12 @@ namespace CSharpEnhanced.Synchronization
 		/// </summary>
 		public int CurrentCount => _InternalSemaphore.CurrentCount;
 
+		/// <summary>
+		/// Returns a <see cref="WaitHandle"/> from the internal <see cref="SemaphoreSlim"/> that can be used to wait on the
+		/// <see cref="SemaphoreSlimFIFOTimeout"/>
+		/// </summary>
+		public WaitHandle AvailableWaitHandle => _InternalSemaphore.AvailableWaitHandle;
+
 		#endregion
 
 		#region Public Methods
@@ -344,6 +350,8 @@ namespace CSharpEnhanced.Synchronization
 
 		#endregion
 
+		#region IDisposable
+
 		/// <summary>
 		/// Releases all resources
 		/// </summary>
@@ -351,6 +359,8 @@ namespace CSharpEnhanced.Synchronization
 		{
 			_InternalSemaphore.Dispose();
 		}
+
+		#endregion
 
 		#endregion
 	}

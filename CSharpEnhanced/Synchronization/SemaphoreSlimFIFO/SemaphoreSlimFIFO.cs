@@ -61,6 +61,12 @@ namespace CSharpEnhanced.Synchronization
 		/// </summary>
 		public int CurrentCount => _InternalSemaphore.CurrentCount;
 
+		/// <summary>
+		/// Returns a <see cref="WaitHandle"/> from the internal <see cref="SemaphoreSlim"/> that can be used to wait on the
+		/// <see cref="SemaphoreSlimFIFO"/>
+		/// </summary>
+		public WaitHandle AvailableWaitHandle => _InternalSemaphore.AvailableWaitHandle;
+
 		#endregion
 
 		#region Public Methods
