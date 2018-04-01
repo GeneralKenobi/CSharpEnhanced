@@ -16,9 +16,7 @@ namespace TestEnvironment
 			CancellationTokenSource source = new CancellationTokenSource();
 			var t = source.Token;
 		
-			Task.Run(async() => { await Task.Delay(1000); source.Cancel(); }) ;
-
-			s.Wait(10000, t);
+			Task.Run(async() => { await Task.Delay(1000); s.Release(); }) ;
 
 
 
