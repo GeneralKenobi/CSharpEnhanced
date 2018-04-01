@@ -9,7 +9,8 @@ namespace CSharpEnhanced.Synchronization
 {
 	/// <summary>
 	/// FIFO semaphore, limits the amount of callers that can continue their execution.
-	/// The first waiter is guaranteed to be released first. Implementation based on an internal <see cref="SemaphoreSlim"/>
+	/// The first waiter is guaranteed to be released first. Implementation based on an internal <see cref="SemaphoreSlim"/>.
+	/// Doesn't support timeouts; For FIFO semaphore with timeouts see <see cref="SemaphoreSlimFIFOTimeout"/>.
 	/// </summary>
     public class SemaphoreSlimFIFO : IDisposable
     {
