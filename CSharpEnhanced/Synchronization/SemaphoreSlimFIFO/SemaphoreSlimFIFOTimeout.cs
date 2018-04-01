@@ -95,21 +95,73 @@ namespace CSharpEnhanced.Synchronization
 		/// <exception cref="ObjectDisposedException"></exception>
 		public void Wait() => WaitAsync().Wait();
 
+		/// <summary>
+		/// Blocks until the caller can enter the <see cref="SemaphoreSlimFIFOTimeout"/>
+		/// while observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="cancellationToken"></param>
+		/// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled</exception>
+		/// <exception cref="ObjectDisposedException"/>
 		public void Wait(CancellationToken cancellationToken) => WaitAsync(cancellationToken).Wait();
 
+		/// <summary>
+		/// Blocks until the caller can enter the <see cref="SemaphoreSlimFIFOTimeout"/> or a timeout occurs.
+		/// </summary>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait before timing out.
+		/// <see cref="Timeout.Infinite"/> (-1) to wait indefinitely, or 0 to test the state and return immediately</param>
+		/// <returns>True if the caller successfully entered the <see cref="SemaphoreSlimFIFOTimeout"/>, false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public bool Wait(int millisecondsTimeout) => WaitAsync(millisecondsTimeout).Result;
+
+		/// <summary>
+		/// Blocks until the caller can enter the <see cref="SemaphoreSlimFIFOTimeout"/> or a timeout occurs while
+		/// observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait before timing out.
+		/// <see cref="Timeout.Infinite"/> (-1) to wait indefinitely, or 0 to test the state and return immediately</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>True if the caller successfully entered the <see cref="SemaphoreSlimFIFOTimeout"/>, false otherwise</returns>
+		/// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled</exception>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public bool Wait(int millisecondsTimeout, CancellationToken cancellationToken) => 
 			WaitAsync(millisecondsTimeout, cancellationToken).Result;
 
+		/// <summary>
+		/// Blocks until the caller can enter the <see cref="SemaphoreSlimFIFOTimeout"/> or a timeout occurs.
+		/// </summary>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait before timing out.
+		/// a <see cref="TimeSpan"/> that represents (-1) to wait indefinitely, or a <see cref="TimeSpan"/> that represents 0 to
+		/// test the state and return immediately</param>
+		/// <returns>True if the caller successfully entered the <see cref="SemaphoreSlimFIFOTimeout"/>, false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public bool Wait(TimeSpan timeout) => WaitAsync(timeout).Result;
 
+		/// <summary>
+		/// Blocks until the caller can enter the <see cref="SemaphoreSlimFIFOTimeout"/> or a timeout occurs while
+		/// observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait before timing out.
+		/// a <see cref="TimeSpan"/> that represents (-1) to wait indefinitely, or a <see cref="TimeSpan"/> that represents 0 to
+		/// test the state and return immediately</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>True if the caller successfully entered the <see cref="SemaphoreSlimFIFOTimeout"/>, false otherwise</returns>
+		/// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled</exception>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public bool Wait(TimeSpan timeout, CancellationToken cancellationToken) => WaitAsync(timeout, cancellationToken).Result;
+
 		#endregion
+
+		#region Waiting Asynchronously
+
 		/// <summary>
 		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/>
 		/// </summary>
 		/// <returns>A task that will complete when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered</returns>
-		/// <exception cref="ObjectDisposedException"></exception>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task WaitAsync()
 		{
 			// Create a Task to enqueue
@@ -136,6 +188,13 @@ namespace CSharpEnhanced.Synchronization
 			return completed.Task;
 		}
 
+		/// <summary>
+		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/> while observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="cancellationToken"></param>
+		/// <returns>A task that will complete when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered</returns>
+		/// <exception cref="OperationCanceledException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task WaitAsync(CancellationToken cancellationToken)
 		{
 			// Create a Task to enqueue
@@ -166,6 +225,15 @@ namespace CSharpEnhanced.Synchronization
 			return completed.Task;
 		}
 
+		/// <summary>
+		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/> or until a timeout occurs
+		/// </summary>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait before timing out.
+		/// <see cref="Timeout.Infinite"/> (-1) to wait indefinitely, or 0 to test the state and return immediately</param>
+		/// <returns>A task that will complete with result of true when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered
+		/// or with result of false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task<bool> WaitAsync(int millisecondsTimeout)
 		{
 			// Create a Task to enqueue
@@ -190,6 +258,18 @@ namespace CSharpEnhanced.Synchronization
 			return completed.Item1.Task;
 		}
 
+		/// <summary>
+		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/> or until a timeout occurs 
+		/// while observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait before timing out.
+		/// <see cref="Timeout.Infinite"/> (-1) to wait indefinitely, or 0 to test the state and return immediately</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>A task that will complete with result of true when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered
+		/// or with result of false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="OperationCanceledException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken)
 		{
 			
@@ -215,6 +295,16 @@ namespace CSharpEnhanced.Synchronization
 			return completed.Item1.Task;
 		}
 
+		/// <summary>
+		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/> or until a timeout occurs
+		/// </summary>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait before timing out.
+		/// a <see cref="TimeSpan"/> that represents (-1) to wait indefinitely, or a <see cref="TimeSpan"/> that represents 0 to
+		/// test the state and return immediately</param>
+		/// <returns>A task that will complete with result of true when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered
+		/// or with result of false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task<bool> WaitAsync(TimeSpan timeout)
 		{
 			if(timeout.Milliseconds > Int32.MaxValue)
@@ -227,6 +317,19 @@ namespace CSharpEnhanced.Synchronization
 			}
 		}
 
+		/// <summary>
+		/// Asynchronously waits to enter the <see cref="SemaphoreSlimFIFOTimeout"/> or until a timeout occurs 
+		/// while observing the <see cref="CancellationToken"/>
+		/// </summary>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait before timing out.
+		/// a <see cref="TimeSpan"/> that represents (-1) to wait indefinitely, or a <see cref="TimeSpan"/> that represents 0 to
+		/// test the state and return immediately</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>A task that will complete with result of true when the <see cref="SemaphoreSlimFIFOTimeout"/> has been entered
+		/// or with result of false otherwise</returns>
+		/// <exception cref="ArgumentOutOfRangeException"/>
+		/// <exception cref="OperationCanceledException"/>
+		/// <exception cref="ObjectDisposedException"/>
 		public Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken)
 		{
 			if (timeout.Milliseconds > Int32.MaxValue)
@@ -239,6 +342,7 @@ namespace CSharpEnhanced.Synchronization
 			}
 		}
 
+		#endregion
 
 		/// <summary>
 		/// Releases all resources
