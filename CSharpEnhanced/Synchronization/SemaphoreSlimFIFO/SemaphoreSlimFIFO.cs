@@ -67,6 +67,11 @@ namespace CSharpEnhanced.Synchronization
 		/// </summary>
 		public WaitHandle AvailableWaitHandle => _InternalSemaphore.AvailableWaitHandle;
 
+		/// <summary>
+		/// The number of callers waiting to get through the semaphore.
+		/// </summary>
+		public int Waiting => _Waiters.Count;
+
 		#endregion
 
 		#region Public Methods
