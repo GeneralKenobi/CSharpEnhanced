@@ -1,7 +1,6 @@
-﻿using System;
+﻿using CSharpEnhanced.Collections;
+using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,8 +49,8 @@ namespace CSharpEnhanced.Synchronization
 		/// <summary>
 		/// Waiting calls and their status (true = timed out)
 		/// </summary>
-		private readonly ConcurrentQueue<Tuple<TaskCompletionSource<bool>, bool>> _Waiters =
-			new ConcurrentQueue<Tuple<TaskCompletionSource<bool>, bool>>();
+		private readonly ConcurrentQueue<Pair<TaskCompletionSource<bool>, bool>> _Waiters =
+			new ConcurrentQueue<Pair<TaskCompletionSource<bool>, bool>>();
 
 		#endregion
 
@@ -68,9 +67,59 @@ namespace CSharpEnhanced.Synchronization
 		/// </summary>
 		public WaitHandle AvailableWaitHandle => _InternalSemaphore.AvailableWaitHandle;
 
+		/// <summary>
+		/// The number of callers waiting to get through the semaphore. Includes waiters that timed out but didn't reach
+		///  the front of the queue yet (however they won't be let through when calling <see cref="Release"/>)
+		/// </summary>
+		public int Waiting => _Waiters.Count;
+
 		#endregion
 
 		#region Public Methods
+
+		#region Accessors
+
+		/// <summary>
+		/// Returns the number of active callers waiting to get through the semaphore (excluding timed out callers)
+		/// </summary>
+		/// <returns></returns>
+		public int ActiveWaiters()
+		{
+			int activeWaiters = 0;
+			
+			// Foreach waiter that isn't marked as timed out
+			foreach(var item in _Waiters)
+			{
+				if (!item.Second)
+				{
+					++activeWaiters;
+				}
+			}
+
+			return activeWaiters;
+		}
+
+		/// <summary>
+		/// Returns the number of timed out callers that weren't yet dequeued
+		/// </summary>
+		/// <returns></returns>
+		public int TimedoutWaiters()
+		{
+			int timedOutWaiters = 0;
+
+			// For each waiter that is marked as timed out
+			foreach (var item in _Waiters)
+			{
+				if (item.Second)
+				{
+					++timedOutWaiters;
+				}
+			}
+
+			return timedOutWaiters;
+		}
+
+		#endregion
 
 		#region Releasing
 
@@ -173,7 +222,7 @@ namespace CSharpEnhanced.Synchronization
 			// Create a Task to enqueue
 			var completed = new TaskCompletionSource<bool>();
 
-			_Waiters.Enqueue(new Tuple<TaskCompletionSource<bool>, bool>(completed, false));
+			_Waiters.Enqueue(new Pair<TaskCompletionSource<bool>, bool>(completed, false));
 
 			// Wait asynchronously
 			_InternalSemaphore.WaitAsync().ContinueWith(x =>
@@ -182,10 +231,10 @@ namespace CSharpEnhanced.Synchronization
 				while (_Waiters.TryDequeue(out var dequeuedItem))
 				{
 					// If the dequeued item didn't time out
-					if (!dequeuedItem.Item2)
+					if (!dequeuedItem.Second)
 					{
 						// Set the result and break
-						dequeuedItem.Item1.SetResult(true);
+						dequeuedItem.First.SetResult(true);
 						break;
 					}
 				}
@@ -206,7 +255,7 @@ namespace CSharpEnhanced.Synchronization
 			// Create a Task to enqueue
 			var completed = new TaskCompletionSource<bool>();
 
-			_Waiters.Enqueue(new Tuple<TaskCompletionSource<bool>, bool>(completed, false));
+			_Waiters.Enqueue(new Pair<TaskCompletionSource<bool>, bool>(completed, false));
 
 			// Wait asynchronously
 			_InternalSemaphore.WaitAsync(cancellationToken).ContinueWith(x =>
@@ -219,10 +268,10 @@ namespace CSharpEnhanced.Synchronization
 				while (_Waiters.TryDequeue(out var dequeuedItem))
 				{
 					// If the dequeued item didn't time out
-					if (!dequeuedItem.Item2)
+					if (!dequeuedItem.Second)
 					{
 						// Set the result and break
-						dequeuedItem.Item1.SetResult(true);
+						dequeuedItem.First.SetResult(true);
 						break;
 					}
 				}
@@ -243,7 +292,7 @@ namespace CSharpEnhanced.Synchronization
 		public Task<bool> WaitAsync(int millisecondsTimeout)
 		{
 			// Create a Task to enqueue
-			var completed = new Tuple<TaskCompletionSource<bool>, bool>(new TaskCompletionSource<bool>(), false);
+			var completed = new Pair<TaskCompletionSource<bool>, bool>(new TaskCompletionSource<bool>(), false);
 			
 			_Waiters.Enqueue(completed);
 
@@ -256,12 +305,12 @@ namespace CSharpEnhanced.Synchronization
 				}
 				else
 				{
-					completed = new Tuple<TaskCompletionSource<bool>, bool>(completed.Item1, true);
+					completed.Second = true;
 				}
-				completed.Item1.SetResult(x.Result);
+				completed.First.SetResult(x.Result);
 			});
 
-			return completed.Item1.Task;
+			return completed.First.Task;
 		}
 
 		/// <summary>
@@ -280,7 +329,7 @@ namespace CSharpEnhanced.Synchronization
 		{
 			
 			// Create a Task to enqueue
-			var completed = new Tuple<TaskCompletionSource<bool>, bool>(new TaskCompletionSource<bool>(), false);
+			var completed = new Pair<TaskCompletionSource<bool>, bool>(new TaskCompletionSource<bool>(), false);
 
 			_Waiters.Enqueue(completed);
 
@@ -293,12 +342,12 @@ namespace CSharpEnhanced.Synchronization
 				}
 				else
 				{
-					completed = new Tuple<TaskCompletionSource<bool>, bool>(completed.Item1, true);
+					completed = new Pair<TaskCompletionSource<bool>, bool>(completed.First, true);
 				}
-				completed.Item1.SetResult(x.Result);
+				completed.First.SetResult(x.Result);
 			});
 
-			return completed.Item1.Task;
+			return completed.First.Task;
 		}
 
 		/// <summary>
