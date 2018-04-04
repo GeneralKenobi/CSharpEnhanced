@@ -12,6 +12,9 @@ namespace TestEnvironment
 		static SemaphoreSlimFIFOTimeout l = new SemaphoreSlimFIFOTimeout(0,5);
 		static void Main(string[] args)
 		{
+			var a = new SemaphoreSlimFIFO(0);
+			a.Release(int.MaxValue);
+
 			//Task.Run(() =>
 			//{
 			//	Thread.Sleep(1000);
@@ -22,7 +25,7 @@ namespace TestEnvironment
 			Task.Run(() =>
 			{
 				Thread.Sleep(1500);
-				Console.WriteLine("Timeout Task waiting...");
+				Console.WriteLine("Standard Task waiting...");
 				l.Wait();
 
 			});
@@ -44,8 +47,8 @@ namespace TestEnvironment
 					Console.WriteLine("Timeout Task timed out...");
 
 			});
-			
 
+			l.Release(3);
 			Thread.Sleep(2000);
 			int gen = l.Waiting;
 

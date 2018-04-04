@@ -301,13 +301,23 @@ namespace CSharpEnhanced.Synchronization
 			{
 				if(x.Result)
 				{
-					_Waiters.TryDequeue(out var dequeuedItem);
+					// Keep dequeuing items until there are no more items or the dequeued item didn't time out
+					while (_Waiters.TryDequeue(out var dequeuedItem))
+					{
+						// If the dequeued item didn't time out
+						if (!dequeuedItem.Second)
+						{
+							// Set the result and break
+							dequeuedItem.First.SetResult(true);
+							break;
+						}
+					}
 				}
 				else
 				{
 					completed.Second = true;
+					completed.First.SetResult(false);
 				}
-				completed.First.SetResult(x.Result);
 			});
 
 			return completed.First.Task;
