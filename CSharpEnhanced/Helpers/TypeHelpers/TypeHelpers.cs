@@ -52,5 +52,27 @@ namespace CSharpEnhanced.Helpers
 			// If there was a success then return true
 			return true;
 		}
+
+		/// <summary>
+		/// Tries to cast <paramref name="obj"/> to type <typeparamref name="T"/> using explicit cast
+		/// and returns true on success.
+		/// Saves eithe the casted <paramref name="obj"/> or <see cref="default(T)"/> to <paramref name="casted"/>.
+		/// </summary>
+		/// <typeparam name="T">Type to cast to</typeparam>
+		/// <param name="obj">Object to cast</param>
+		/// <returns>True on success, false on failure</returns>
+		public static bool TryCast<T>(object obj, out T casted)
+		{
+			try
+			{
+				casted = (T)obj;
+				return true;
+			}
+			catch(InvalidCastException)
+			{
+				casted = default(T);
+				return false;
+			}
+		}
 	}
 }
