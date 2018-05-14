@@ -1,4 +1,5 @@
-﻿using CSharpEnhanced.Synchronization;
+﻿using CSharpEnhanced.Helpers;
+using CSharpEnhanced.Synchronization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,70 +8,52 @@ using System.Threading.Tasks;
 
 namespace TestEnvironment
 {
-    class Program
+
+	
+
+	class Program
     {
 		static SemaphoreSlimFIFOTimeout l = new SemaphoreSlimFIFOTimeout(0,5);
 		static void Main(string[] args)
 		{
-			var a = new SemaphoreSlimFIFO(0);
-			a.Release(int.MaxValue);
+			int a = 5;
+			object b = a;
+			TypeHelpers.TryCast<string>(a, out string d);
 
-			//Task.Run(() =>
-			//{
-			//	Thread.Sleep(1000);
-			//	Console.WriteLine("Standard Task waiting...");
-			//	l.Wait();
-			//	Console.WriteLine("Standard Task went through...");
-			//});
+			CancellationTokenSource c = new CancellationTokenSource();
+			CancellationToken token = c.Token;
+			c.Dispose();
+			c = null;
+			
+			AutoResetEvent e = new AutoResetEvent(false);
+			Stopwatch s = new Stopwatch();
+			
+
+			//c.Token.Register(() => e.Set());
+			
+			var task = Task.Factory.StartNew(() =>
+			{
+
+			
+					s.Start();
+					var waitingArray = new[] { c.Token.WaitHandle, e };
+					var returned = WaitHandle.WaitAny(waitingArray);
+					c.Token.ThrowIfCancellationRequested();
+				
+			}, c.Token).ContinueWith((x) => Debug.WriteLine($"Task canceled at {s.ElapsedMilliseconds}"));
+			
 			Task.Run(() =>
 			{
-				Thread.Sleep(1500);
-				Console.WriteLine("Standard Task waiting...");
-				l.Wait();
+				Thread.Sleep(500);
+				e.Set();
+				//c.Cancel();
 
-			});
-			Task.Run(() =>
-			{
-				Console.WriteLine("Timeout Task waiting...");
-				if(l.Wait(1000))
-					Console.WriteLine("Timeout Task went through...");
-				else
-					Console.WriteLine("Timeout Task timed out...");
-
-			});
-			Task.Run(() =>
-			{
-				Console.WriteLine("Timeout Task waiting...");
-				if (l.Wait(1000))
-					Console.WriteLine("Timeout Task went through...");
-				else
-					Console.WriteLine("Timeout Task timed out...");
-
+				Thread.Sleep(500);
 			});
 
-			l.Release(3);
-			Thread.Sleep(2000);
-			int gen = l.Waiting;
+			var state = task.IsCanceled;
 
-			int act = l.ActiveWaiters();
-
-			int inact = l.TimedoutWaiters();
-
-			//Task.Run(() =>
-			//{
-			//	Thread.Sleep(1500);
-			//	l.Release();
-			//});
-
-			Console.ReadLine();
-
-			l.Release();
-			Thread.Sleep(1000);
-			gen = l.Waiting;
-
-			act = l.ActiveWaiters();
-
-			inact = l.TimedoutWaiters();
+			Console.ReadKey();
 		}
 
 		private static async void Test(int counter)
