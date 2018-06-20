@@ -9,7 +9,7 @@ namespace CSharpEnhanced.CoreClasses
 	/// <summary>
 	/// Base class for classes that don't derive from anything and want to implement <see cref="INotifyPropertyChanged"/>
 	/// </summary>
-	class INotifyPropertyChangedImplemented : INotifyPropertyChanged
+	public class INotifyPropertyChangedImplemented : INotifyPropertyChanged
 	{
 		#region Property Changed Event
 
