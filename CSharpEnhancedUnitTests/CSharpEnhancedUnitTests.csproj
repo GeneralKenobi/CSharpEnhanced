@@ -46,8 +46,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexExtensionMethods\ComplexExtensionMethodsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Collections\SemaphoreSlimFIFOTimeoutTest.cs" />
   </ItemGroup>
