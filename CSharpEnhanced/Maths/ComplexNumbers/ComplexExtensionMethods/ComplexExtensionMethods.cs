@@ -16,7 +16,9 @@ namespace CSharpEnhanced.Maths
 		/// <param name="complex">Complex number to round</param>
 		/// <param name="roundTo">Number whose multiple to round to</param>
 		/// <returns></returns>
-		public static Complex RoundTo(this Complex complex, double roundTo) =>
-			new Complex(Math.Round(complex.Real / roundTo) * roundTo, Math.Round(complex.Imaginary / roundTo) * roundTo);
+		public static Complex RoundTo(this Complex complex, double roundTo,
+			MidpointRounding rounding = MidpointRounding.AwayFromZero) =>
+			new Complex(Math.Round(complex.Real / roundTo, rounding) * roundTo,
+				Math.Round(complex.Imaginary / roundTo, rounding) * roundTo);
 	}
 }
