@@ -132,6 +132,16 @@ namespace CSharpEnhanced.Maths
 
 		#endregion
 
+		#region Implicit conversion
+
+		/// <summary>
+		/// Converts the <see cref="Product"/> into an <see cref="Expression"/> with <paramref name="p"/> in its products list
+		/// </summary>
+		/// <param name="p"></param>
+		public static implicit operator Expression(Product p) => new Expression() { Products = new List<Product>() { p } };
+
+		#endregion
+
 		#region Private methods
 
 		/// <summary>

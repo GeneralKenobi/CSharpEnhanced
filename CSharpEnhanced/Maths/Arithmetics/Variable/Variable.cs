@@ -1,4 +1,5 @@
 ﻿using CSharpEnhanced.CoreClasses;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace CSharpEnhanced.Maths
@@ -20,7 +21,7 @@ namespace CSharpEnhanced.Maths
 		#region Constructor
 
 		/// <summary>
-		/// Constructor with parameters for static constants
+		/// Constructor with parameters for static constants and implicit conversions
 		/// </summary>
 		private Variable(Complex value)
 		{
@@ -92,6 +93,23 @@ namespace CSharpEnhanced.Maths
 		/// Pure imaginary negative one
 		/// </summary>
 		public static Variable NegativeImaginaryOne { get; } = new Variable(-Complex.ImaginaryOne);
+
+		#endregion
+
+		#region Implicit conversion
+
+		/// <summary>
+		/// Implicit conversion of a <see cref="Complex"/> into a <see cref="Variable"/>
+		/// </summary>
+		/// <param name="c"></param>
+		public static implicit operator Variable(Complex c) => new Variable(c);
+
+		/// <summary>
+		/// Converts a <see cref="Variable"/> into a <see cref="Product"/> with the given <see cref="Variable"/> in the
+		/// <see cref="Product"/>'s Numerator
+		/// </summary>
+		/// <param name="v"></param>
+		public static implicit operator Product(Variable v) => new Product(new List<Variable>() { v }, new List<Variable>());
 
 		#endregion
 	}
