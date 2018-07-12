@@ -28,7 +28,7 @@ namespace CSharpEnhanced.Maths
 		{
 			var result = Complex.Zero;
 
-			//Monomials.ForEach((x) => result += x.Coefficient * x.Var.Value);
+			Products.ForEach((x) => result += x.Evaluate());
 
 			return result;
 		}

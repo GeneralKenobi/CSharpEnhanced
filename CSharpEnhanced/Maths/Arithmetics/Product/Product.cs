@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace CSharpEnhanced.Maths
 {
@@ -152,6 +153,24 @@ namespace CSharpEnhanced.Maths
 					--i;
 				}
 			}
+		}
+
+		#endregion
+
+		#region Public methods
+
+		/// <summary>
+		/// Returns the value of the product
+		/// </summary>
+		/// <returns></returns>
+		public Complex Evaluate()
+		{
+			var result = Complex.Zero;
+
+			Numerator.ForEach((x) => result *= x.Value);
+			Denominator.ForEach((x) => result /= x.Value);
+
+			return result;
 		}
 
 		#endregion
