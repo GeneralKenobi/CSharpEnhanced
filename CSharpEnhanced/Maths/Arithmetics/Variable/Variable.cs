@@ -16,7 +16,7 @@ namespace CSharpEnhanced.Maths
 	/// Variables may not be created directly, instead they can be obtained from a <see cref="VariableSource"/>.
 	/// <see cref="Variable"/>s may only read the value, <see cref="VariableSource"/> may read it as well as set it.
 	/// </summary>
-	public partial class Variable
+	public partial class Variable : IExpression
     {
 		#region Constructor
 
@@ -110,6 +110,56 @@ namespace CSharpEnhanced.Maths
 		/// </summary>
 		/// <param name="v"></param>
 		public static implicit operator Product(Variable v) => new Product(new List<Variable>() { v }, new List<Variable>());
+
+		#endregion
+
+		#region Public methods
+
+		/// <summary>
+		/// Returns the value of this variable
+		/// </summary>
+		/// <returns></returns>
+		public Complex Evaluate() => Value;
+
+		/// <summary>
+		/// Returns a negation of this <see cref="Variable"/> wrapped in an <see cref="SOP"/>
+		/// </summary>
+		/// <returns></returns>
+		public IExpression Negation() => new SOP(this).Negation();
+
+		/// <summary>
+		/// Returns the reciprocal of this <see cref="Variable"/> wrapped in an <see cref="POS"/>
+		/// </summary>
+		/// <returns></returns>
+		public IExpression Reciprocal() => new POS(this).Reciprocal();
+
+		/// <summary>
+		/// Adds this <see cref="Variable"/> to the <paramref name="expression"/>, the result is wrapped in an <see cref="SOP"/>
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public IExpression Add(IExpression expression) => new SOP(this).Add(expression);
+
+		/// <summary>
+		/// Adds <paramref name="expression"/> from this <see cref="Variable"/>, the result is wrapped in an <see cref="SOP"/>
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public IExpression Subtract(IExpression expression) => new SOP(this).Subtract(expression);
+
+		/// <summary>
+		/// Mutliplies this <see cref="Variable"/> by <paramref name="expression"/>, result is wrapped in a <see cref="POS"/>
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public IExpression Multiply(IExpression expression) => new POS(this).Multiply(expression);
+
+		/// <summary>
+		/// Divides this <see cref="Variable"/> by <paramref name="expression"/>, result is wrapped in a <see cref="POS"/>
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public IExpression Divide(IExpression expression) => new POS(this).Divide(expression);
 
 		#endregion
 	}
