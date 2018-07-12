@@ -183,6 +183,12 @@ namespace CSharpEnhanced.Maths
 			return result;
 		}
 
+		/// <summary>
+		/// Returns a new product that is a reciprocal of the instance
+		/// </summary>
+		/// <returns></returns>
+		public Product Reciprocal() => new Product(new List<Variable>(Denominator), new List<Variable>(Numerator));
+
 		#endregion
 	}
 }
