@@ -4,28 +4,55 @@ using System.Numerics;
 namespace CSharpEnhanced.Maths
 {
 	/// <summary>
-	/// Class representing a single variable that may be referenced by many objects
+	/// <see cref="Variable"/> is a class supporting the idea of symbolical solving of some math problems. When utilizing it, one
+	/// may compute a general solution, for eg. X = Var1 + Var2*Var3 where it's no longer necessary to manipulate the system, only
+	/// a simple substitution of values for Vars will yield a result.
+	/// A good exampele of usage would be when simulating an electronic circuit. An admittance matrix would be constructed and,
+	/// normally, a system of linear equations would have to be solved whenever some parameter changes (for example for AC analysis
+	/// the voltge changes with time). Instead one may compute a general solution using <see cref="Variable"/>s and then simply
+	/// substitute admittances, sources and so on to obtain valid solution. The initial solution of the system will be more
+	/// time-consuming but it will significantly reduce all solutions for systems of the same structure.
+	/// Variables may not be created directly, instead they can be obtained from a <see cref="VariableSource"/>.
+	/// <see cref="Variable"/>s may only read the value, <see cref="VariableSource"/> may read it as well as set it.
 	/// </summary>
-	public class Variable : RefWrapper<Complex>
+	public partial class Variable
     {
 		#region Constructor
 
 		/// <summary>
-		/// Default Constructor
+		/// Constructor with parameters for static constants
 		/// </summary>
-		public Variable() { }
+		private Variable(Complex value)
+		{
+			_Value = new RefWrapper<Complex>();
+		}
 
 		/// <summary>
-		/// Default Constructor
+		/// Constructor with parameters for construction with <see cref="VariableSource"/>
 		/// </summary>
-		public Variable(Complex value)
+		/// <param name="value"></param>
+		private Variable(RefWrapper<Complex> value)
 		{
-			Value = value;
+			_Value = value;
 		}
 
 		#endregion
 
+		#region Private properties
+
+		/// <summary>
+		/// Reference to the value set in the parent <see cref="VariableSource"/>
+		/// </summary>
+		private RefWrapper<Complex> _Value { get; }
+
+		#endregion
+
 		#region Public properties
+
+		/// <summary>
+		/// Value of this variable
+		/// </summary>
+		public Complex Value => new Complex(_Value.Value.Real, _Value.Value.Imaginary);
 
 		/// <summary>
 		/// True if the imaginary component is equal to 0
