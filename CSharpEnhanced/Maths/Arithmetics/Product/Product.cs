@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Text;
 
 namespace CSharpEnhanced.Maths
 {
 	/// <summary>
 	/// Linear monomial is a monomial of degree at most 1, eg. 5 or 3+5i or (1+2i)x
 	/// </summary>
-    public class Product
+	public class Product
     {
 		#region Constructor
 
@@ -29,12 +26,7 @@ namespace CSharpEnhanced.Maths
 
 		#endregion
 
-		#region Public Properties
-
-		/// <summary>
-		/// Coefficient of the monomial, by default 1
-		/// </summary>
-		public Complex Coefficient { get; set; } = Complex.One;
+		#region Public Properties		
 
 		/// <summary>
 		/// Numerator is a product of all entries in this list
@@ -78,6 +70,61 @@ namespace CSharpEnhanced.Maths
 				new List<Variable>(p1.Denominator.Concat(p2.Numerator)));
 
 			result.Reduce();
+
+			return result;
+		}
+
+		/// <summary>
+		/// Returns a sum of two products (an expression)
+		/// </summary>
+		/// <param name="p1"></param>
+		/// <param name="p2"></param>
+		/// <returns></returns>
+		public static Expression operator +(Product p1, Product p2)
+		{
+			return new Expression()
+			{
+				Products = new List<Product>()
+				{
+					p1, p2
+				}
+			};
+		}
+
+		/// <summary>
+		/// Returns a difference of two products (an expression)
+		/// </summary>
+		/// <param name="p1"></param>
+		/// <param name="p2"></param>
+		/// <returns></returns>
+		public static Expression operator -(Product p1, Product p2)
+		{
+			return new Expression()
+			{
+				Products = new List<Product>()
+				{
+					p1, -p2
+				}
+			};
+		}
+
+		/// <summary>
+		/// Returns a negation of <paramref name="p"/>
+		/// </summary>
+		/// <param name="p"></param>
+		/// <returns></returns>
+		public static Product operator -(Product p)
+		{
+			var result = new Product(new List<Variable>(p.Numerator), new List<Variable>(p.Denominator));
+			
+			if(result.Numerator.Contains(Variable.NegativeOne))
+			{
+				result.Numerator.Remove(Variable.NegativeOne);
+			}
+			else
+			{
+				result.Numerator.Add(Variable.NegativeOne);
+			}
 
 			return result;
 		}
