@@ -39,7 +39,13 @@ namespace CSharpEnhanced.Maths
 		/// Returns a negation of the <see cref="IExpression"/>
 		/// </summary>
 		/// <returns></returns>
-		public IExpression Negate() => new ExpressionIdentities(-Value);
+		public IExpression Negation() => new ExpressionIdentities(-Value);
+
+		/// <summary>
+		/// Returns the reciprocal of the <see cref="IExpression"/>
+		/// </summary>
+		/// <returns></returns>
+		public IExpression Reciprocal() => new ExpressionIdentities(1 / Value);
 
 		#endregion
 
