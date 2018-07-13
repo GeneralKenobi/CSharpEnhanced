@@ -36,6 +36,28 @@ namespace CSharpEnhanced.Maths
 			}
 
 			/// <summary>
+			/// Constructor taking initial value as parameter
+			/// </summary>
+			/// <param name="initialValue"></param>
+			public VariableSource(Complex initialValue) : this()
+			{
+				Value = initialValue;
+			}
+
+			/// <summary>
+			/// Constructor taking initial real value as parameter
+			/// </summary>
+			/// <param name="initialValue"></param>
+			public VariableSource(double initialRealValue) : this(new Complex(initialRealValue, 0)) { }
+
+			/// <summary>
+			/// Constructor taking real real value and imaginary initial value as parameters
+			/// </summary>
+			/// <param name="initialValue"></param>
+			public VariableSource(double initialRealValue, double initialImaginaryValue)
+				: this(new Complex(initialRealValue, initialImaginaryValue)) { }
+
+			/// <summary>
 			/// Constructor taking a label parameter
 			/// </summary>
 			/// <param name="label"></param>
@@ -43,6 +65,29 @@ namespace CSharpEnhanced.Maths
 			{
 				Label = label;
 			}
+
+			/// <summary>
+			/// Constructor taking a label parameter and initial value as parameters
+			/// </summary>
+			/// <param name="label"></param>
+			public VariableSource(Complex initialValue, string label) : this()
+			{
+				Value = initialValue;
+				Label = label;
+			}
+
+			/// <summary>
+			/// Constructor taking a label parameter and real initial value as parameters
+			/// </summary>
+			/// <param name="label"></param>
+			public VariableSource(double initialRealValue, string label) : this(new Complex(initialRealValue, 0), label) { }
+
+			/// <summary>
+			/// Constructor taking a label parameter, real initial value and imaginary initial valuie as parameters
+			/// </summary>
+			/// <param name="label"></param>
+			public VariableSource(double initialRealValue, double initialImaginaryValue, string label)
+				: this(new Complex(initialRealValue, initialImaginaryValue), label) { }
 
 			#endregion
 
