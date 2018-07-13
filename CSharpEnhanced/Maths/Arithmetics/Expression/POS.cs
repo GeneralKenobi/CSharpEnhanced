@@ -231,18 +231,23 @@ namespace CSharpEnhanced.Maths
 				return string.Empty;
 			}
 
+			// Start with an open bracket
 			var result = "(";
 
+			// Add each factor's string version and follow it up with a multiplication sign
 			_Factors.ForEach((x) => result += x.ToString() + " * ");
 
+			// Remove the last (unnecessary) multiplication sign
 			result = result.Substring(0, result.Length - 3);
 
+			// Close the bracket
 			result += ")";
 
+			// If the POS is negated, add a -1 power at the end
 			if(Power)
 			{
-				result = result.Insert(0, "[");
-				result += "^(-1)]";
+				result = result.Insert(0, "(");
+				result += "^(-1))";
 			}
 
 			return result;

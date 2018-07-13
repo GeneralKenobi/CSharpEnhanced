@@ -219,19 +219,27 @@ namespace CSharpEnhanced.Maths
 				return string.Empty;
 			}
 
+			// Start with an open bracket
 			var result = "(";
 
+			// Add each summand's string version and follow it up with an addition sign
 			_Summands.ForEach((x) => result += x.ToString() + " + ");
 
+			// Remove the last (unnecessary) addition sign
 			result = result.Substring(0, result.Length - 3);
 
+			// Close the bracket
 			result += ")";
 
-			if(Sign)
+			// If the SOP is negated add a minus at the beginning
+			if (Sign)
 			{
-				result = result.Insert(0, "[-");
-				result += "]";
+				result = result.Insert(0, "- ");
+				result += "";
 			}
+
+			// If somewhere there is a add a negative component simply remove the "+"
+			result = result.Replace("+ -", "-");
 
 			return result;
 		}
