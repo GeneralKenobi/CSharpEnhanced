@@ -32,7 +32,16 @@ namespace CSharpEnhanced.Maths
 			/// </summary>
 			public VariableSource()
 			{
-				Variable = new Variable(ValueWrapper);
+				Variable = new Variable(ValueWrapper, LabelWrapper);
+			}
+
+			/// <summary>
+			/// Constructor taking a label parameter
+			/// </summary>
+			/// <param name="label"></param>
+			public VariableSource(string label) : this()
+			{
+				Label = label;
 			}
 
 			#endregion
@@ -40,7 +49,16 @@ namespace CSharpEnhanced.Maths
 			#region Public properties
 
 			/// <summary>
-			/// Shortcut to <see cref="ValueWrapper"/>'s Value property
+			/// Accessors to the <see cref="ValueWrapper"/>.Value property
+			/// </summary>
+			public string Label
+			{
+				get => LabelWrapper.Value;
+				set => LabelWrapper.Value = value;
+			}
+
+			/// <summary>
+			/// Accessors to <see cref="ValueWrapper"/>'s Value property
 			/// </summary>
 			public Complex Value
 			{
@@ -52,6 +70,11 @@ namespace CSharpEnhanced.Maths
 			/// The value of the variable
 			/// </summary>
 			public RefWrapper<Complex> ValueWrapper { get; } = new RefWrapper<Complex>();
+
+			/// <summary>
+			/// The label assigned to this <see cref="VariableSource"/>
+			/// </summary>
+			public RefWrapper<string> LabelWrapper { get; } = new RefWrapper<string>();
 
 			/// <summary>
 			/// Variable that allows to read but not modify the value of this <see cref="VariableSource"/>

@@ -32,14 +32,20 @@ namespace CSharpEnhanced.Maths
 		/// Constructor with parameters for construction with <see cref="VariableSource"/>
 		/// </summary>
 		/// <param name="value"></param>
-		private Variable(RefWrapper<Complex> value)
+		private Variable(RefWrapper<Complex> value, RefWrapper<string> label)
 		{
 			_Value = value;
+			_Label = label;
 		}
 
 		#endregion
 
 		#region Private properties
+
+		/// <summary>
+		/// Reference to the label set in the parent <see cref="VariableSource"/>
+		/// </summary>
+		private RefWrapper<string> _Label { get; }
 
 		/// <summary>
 		/// Reference to the value set in the parent <see cref="VariableSource"/>
@@ -51,7 +57,12 @@ namespace CSharpEnhanced.Maths
 		#region Public properties
 
 		/// <summary>
-		/// Value of this variable
+		/// Label assigned to this <see cref="Variable"/>
+		/// </summary>
+		public string Label => _Label.Value;
+
+		/// <summary>
+		/// Value of this <see cref="Variable"/>
 		/// </summary>
 		public Complex Value => new Complex(_Value.Value.Real, _Value.Value.Imaginary);
 
