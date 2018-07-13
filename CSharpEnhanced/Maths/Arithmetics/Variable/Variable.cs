@@ -113,14 +113,7 @@ namespace CSharpEnhanced.Maths
 		/// Implicit conversion of a <see cref="Complex"/> into a <see cref="Variable"/>
 		/// </summary>
 		/// <param name="c"></param>
-		public static implicit operator Variable(Complex c) => new Variable(c);
-
-		/// <summary>
-		/// Converts a <see cref="Variable"/> into a <see cref="Product"/> with the given <see cref="Variable"/> in the
-		/// <see cref="Product"/>'s Numerator
-		/// </summary>
-		/// <param name="v"></param>
-		public static implicit operator Product(Variable v) => new Product(new List<Variable>() { v }, new List<Variable>());
+		public static implicit operator Variable(Complex c) => new Variable(c);		
 
 		#endregion
 
