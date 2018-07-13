@@ -129,7 +129,13 @@ namespace CSharpEnhanced.Maths
 		/// <returns></returns>
 		public Complex Evaluate()
 		{
-			return Complex.Zero;
+			var result = Complex.Zero;
+
+			// Add all summands
+			_Summands.ForEach((x) => result += x.Evaluate());
+			
+			// If the sum was negated, negate the result
+			return Sign ? -result : result;
 		}
 
 		/// <summary>
@@ -201,6 +207,34 @@ namespace CSharpEnhanced.Maths
 		/// <param name="expression"></param>
 		/// <returns></returns>
 		public IExpression Divide(IExpression expression) => new POS(this, expression.Reciprocal());
+
+		/// <summary>
+		/// Returns a string version of the expression
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			if (Summands.Count == 0)
+			{
+				return string.Empty;
+			}
+
+			var result = "(";
+
+			_Summands.ForEach((x) => result += x.ToString() + " + ");
+
+			result = result.Substring(0, result.Length - 3);
+
+			result += ")";
+
+			if(Sign)
+			{
+				result = result.Insert(0, "[-");
+				result += "]";
+			}
+
+			return result;
+		}
 
 		#endregion
 	}

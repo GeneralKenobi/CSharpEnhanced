@@ -6,7 +6,8 @@ using System.Numerics;
 namespace CSharpEnhanced.Maths
 {
 	/// <summary>
-	/// A product of sums - contains one or more <see cref="IExpression"/>s that together form a product
+	/// A product of sums - contains one or more <see cref="IExpression"/>s that together form a product.
+	/// Important: empty product is by convention equal to 1
 	/// </summary>
 	public class POS : IExpression
     {
@@ -122,12 +123,18 @@ namespace CSharpEnhanced.Maths
 		#region Public methods
 
 		/// <summary>
-		/// Returns the value of this <see cref="IExpression"/>
+		/// Returns the value of this <see cref="POS"/>. Important: empty product is by convention equal to 1
 		/// </summary>
 		/// <returns></returns>
 		public Complex Evaluate()
 		{
-			return Complex.Zero;
+			var result = Complex.One;
+
+			// Multiply together all factors
+			_Factors.ForEach((x) => result *= x.Evaluate());
+
+			// If the power is -1 (true) then return a reciprocal
+			return Power ? Complex.Reciprocal(result) : result;
 		}
 
 		/// <summary>
@@ -212,6 +219,34 @@ namespace CSharpEnhanced.Maths
 		/// <param name="expression"></param>
 		/// <returns></returns>
 		public IExpression Divide(IExpression expression) => Multiply(expression.Reciprocal());
+
+		/// <summary>
+		/// Returns a string version of the expression
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			if(Factors.Count == 0)
+			{
+				return string.Empty;
+			}
+
+			var result = "(";
+
+			_Factors.ForEach((x) => result += x.ToString() + " * ");
+
+			result = result.Substring(0, result.Length - 3);
+
+			result += ")";
+
+			if(Power)
+			{
+				result = result.Insert(0, "[");
+				result += "^(-1)]";
+			}
+
+			return result;
+		}
 
 		#endregion
 	}
