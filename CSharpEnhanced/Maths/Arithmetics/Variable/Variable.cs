@@ -172,6 +172,12 @@ namespace CSharpEnhanced.Maths
 		/// <returns></returns>
 		public IExpression Divide(IExpression expression) => new POS(this).Divide(expression);
 
+		/// <summary>
+		/// Overrides the ToString method, returns either "*Label* = *Value*" if label is not null or simply "*Value*"
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString() => Label ?? Value.ToString();
+
 		#endregion
 	}
 }
