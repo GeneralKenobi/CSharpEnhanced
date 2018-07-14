@@ -65,21 +65,6 @@ namespace CSharpEnhanced.Maths
 			FreeTerms[rowToSubtractFrom] = FreeTerms[rowToSubtractFrom].Subtract(FreeTerms[rowToSubtract].Multiply(multiplier));
 		}
 
-		/// <summary>
-		/// Multiplies a row by the given number
-		/// </summary>
-		/// <param name="row"></param>
-		/// <param name="number"></param>
-		private void MultiplyRowBy(int row, IExpression number)
-		{
-			for (int i = 0; i < Columns; ++i)
-			{
-				Coefficients[row, i] = Coefficients[row,i].Multiply(number);
-			}
-
-			FreeTerms[row] = FreeTerms[row].Multiply(number);
-		}
-
 		private void DivideRowByDiagonal(int row)
 		{
 			var divider = Coefficients[row, row];
