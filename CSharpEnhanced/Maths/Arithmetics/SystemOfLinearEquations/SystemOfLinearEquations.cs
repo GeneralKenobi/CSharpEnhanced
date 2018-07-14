@@ -28,35 +28,38 @@ namespace CSharpEnhanced.Maths
 		/// </summary>
 		public void Solve()
 		{
+			ForwardElemination();
+			BackwardsElimination();
+		}
+
+		private void ForwardElemination()
+		{
 			for (int i = 0; i < Rows; ++i)
 			{
 				DivideRowByDiagonal(i);
-				
-				for(int j = i + 1; j < Rows; ++j)
+
+				for (int j = i + 1; j < Rows; ++j)
 				{
-					SubtractRowFromRow(j, i, Coefficients[j,i]);					
-				}
-			}
-			
-			for (int i = Rows - 1; i >= 0; --i)
-			{
-				for (int j = i - 1; j >= 0; --j)
-				{
-					SubtractRowFromRow(j, i, Coefficients[j,i]);
+					SubtractRows(j, i, Coefficients[j, i], i + 1, Columns);
 				}
 			}
 		}
 
-		/// <summary>
-		/// Subtracts respective entries from row <paramref name="rowToSubtract"/> multiplied by <paramref name="multiplier"/>
-		/// from entries in row <paramref name="rowToSubtractFrom"/>
-		/// </summary>
-		/// <param name="rowToSubtractFrom"></param>
-		/// <param name="rowToSubtract"></param>
-		/// <param name="multiplier"></param>
-		private void SubtractRowFromRow(int rowToSubtractFrom, int rowToSubtract, IExpression multiplier)
+		private void BackwardsElimination()
 		{
-			for (int i = 0; i < Columns; ++i)
+			for (int i = Rows - 1; i >= 0; --i)
+			{
+				for (int j = i - 1; j >= 0; --j)
+				{
+					SubtractFreeTerms(j, i, Coefficients[j, i]);
+				}
+			}
+		}
+
+		private void SubtractRows(int rowToSubtractFrom, int rowToSubtract, IExpression multiplier,
+			int startFromColumn, int endAtColumn)
+		{
+			for (int i = startFromColumn; i < endAtColumn; ++i)
 			{
 				Coefficients[rowToSubtractFrom, i] =
 					Coefficients[rowToSubtractFrom, i].Subtract(Coefficients[rowToSubtract, i].Multiply(multiplier));
@@ -65,11 +68,14 @@ namespace CSharpEnhanced.Maths
 			FreeTerms[rowToSubtractFrom] = FreeTerms[rowToSubtractFrom].Subtract(FreeTerms[rowToSubtract].Multiply(multiplier));
 		}
 
+		private void SubtractFreeTerms(int rowToSubtractFrom, int rowToSubtract, IExpression multiplier) =>
+			FreeTerms[rowToSubtractFrom] = FreeTerms[rowToSubtractFrom].Subtract(FreeTerms[rowToSubtract].Multiply(multiplier));
+
 		private void DivideRowByDiagonal(int row)
 		{
 			var divider = Coefficients[row, row];
 
-			for (int i = 0; i < Columns; ++i)
+			for (int i = row; i < Columns; ++i)
 			{
 				Coefficients[row, i] = Coefficients[row, i].Divide(divider);
 			}
