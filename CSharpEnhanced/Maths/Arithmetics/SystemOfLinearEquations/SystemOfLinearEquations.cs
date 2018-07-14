@@ -10,6 +10,8 @@ namespace CSharpEnhanced.Maths
 	/// </summary>
 	public partial class LinearEquations
 	{
+		#region Constructor
+
 		/// <summary>
 		/// Default Constructor, methods that use it should make sure that the requirements they present for these
 		/// matrices are fulfilled
@@ -19,6 +21,10 @@ namespace CSharpEnhanced.Maths
 			Coefficients = coefficients;
 			FreeTerms = freeTerms;
 		}
+
+		#endregion
+
+		#region Protected properties
 
 		/// <summary>
 		/// Matrix of coefficients
@@ -30,7 +36,11 @@ namespace CSharpEnhanced.Maths
 		/// </summary>
 		protected IExpression[] FreeTerms { get; set; }
 
-		// The size of the system - number of equations
+		/// <summary>
+		/// The size of the system - number of equations
+		/// </summary>
 		protected int Size => FreeTerms.Length;
+
+		#endregion
 	}
 }
