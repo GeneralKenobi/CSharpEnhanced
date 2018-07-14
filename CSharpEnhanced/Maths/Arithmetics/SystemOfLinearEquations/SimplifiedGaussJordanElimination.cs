@@ -23,10 +23,9 @@ namespace CSharpEnhanced.Maths
 			{
 				// Create a new solver instance
 				var solver = new SimplifiedGaussJordanEliminationSolver(coefficients, freeTerms);
-				
+
 				// Perform necessary operations
-				solver.ForwardElemination();
-				solver.BackwardsElimination();
+				solver.Solve();
 
 				// Return the result
 				return solver.FreeTerms;
@@ -38,16 +37,24 @@ namespace CSharpEnhanced.Maths
 			}
 		}
 
+		/// <summary>
+		/// Helper class that can be used to solve a system of linear equations
+		/// </summary>
 		private class SimplifiedGaussJordanEliminationSolver : LinearEquations
 		{
-
 			/// <summary>
 			/// Default Constructor
 			/// </summary>
 			public SimplifiedGaussJordanEliminationSolver(IExpression[,] coefficients, IExpression[] freeTerms)
 				: base(coefficients, freeTerms)	{ }
 
-			public void ForwardElemination()
+			public void Solve()
+			{
+				ForwardElemination();
+				BackwardsElimination();
+			}
+
+			private void ForwardElemination()
 			{
 				for (int i = 0; i < Size; ++i)
 				{
@@ -60,7 +67,7 @@ namespace CSharpEnhanced.Maths
 				}
 			}
 
-			public void BackwardsElimination()
+			private void BackwardsElimination()
 			{
 				for (int i = Size - 1; i >= 0; --i)
 				{
