@@ -5,7 +5,7 @@ using System.Text;
 namespace CSharpEnhanced.Collections
 {
 	/// <summary>
-	/// Class containg two elements, similiar to <see cref="Tuple{T1, T2}"/> but is mutable and servers only as a wrapper, for
+	/// Class containg two elements, similiar to <see cref="Tuple{T1, T2}"/> but is mutable and serves only as a wrapper, for
 	/// example for a Queue of pairs
 	/// </summary>
 	public class Pair<T1, T2>
