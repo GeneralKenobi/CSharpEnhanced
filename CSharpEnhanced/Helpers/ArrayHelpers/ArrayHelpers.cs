@@ -62,9 +62,9 @@
 		/// <param name="value"></param>
 		public static void Initialize<T>(this T[,] array, T value)
 		{
-			for (int i = 0; i < array.Length; ++i)
+			for (int i = 0; i < array.GetLength(0); ++i)
 			{
-				for (int j = 0; j < array.Length; ++j)
+				for (int j = 0; j < array.GetLength(1); ++j)
 				{
 					array[i,j] = value;
 				}
