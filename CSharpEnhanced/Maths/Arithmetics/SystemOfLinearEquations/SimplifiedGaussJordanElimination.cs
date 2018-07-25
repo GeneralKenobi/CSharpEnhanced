@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CSharpEnhanced.Maths
 {
@@ -51,7 +52,13 @@ namespace CSharpEnhanced.Maths
 		/// Helper class that can be used to solve a system of linear equations expected to have a unique solution
 		/// using a simplified Gauss-Jordan elimination (only the operations on matrix of coefficients that are
 		/// necessary to obtain the result are performed). The matrix of coefficients and the vector of free
-		/// terms are both modified in the process.
+		/// terms are both modified in the process. It is important that the values of coefficients don't change in a way that
+		/// would cause a pivot entry to become 0 as this would invalidate the computed expressions. A good example of a situation
+		/// where this probably won't happen is an admittance matrix - every non-zero entry will remain non-zero because, if it
+		/// didn't then it means that the schematic was modified and a new admittance matrix needs to be constructed. Of cource, it
+		/// is possible that a specific combination of admittances will result in a pivot that was canceled out leading to division
+		/// by 0, but given that it's very unprobable it's probably easier to check if the solution for a given set of parameters is
+		/// correct and if not simply recompute the solution
 		/// </summary>
 		private class SimplifiedGaussJordanEliminationSolver : LinearEquations
 		{
@@ -91,6 +98,9 @@ namespace CSharpEnhanced.Maths
 				// For each row
 				for (int i = 0; i < Size; ++i)
 				{
+					// Make sure there is a non-zero entry on the main diagonal
+					GuaranteeNonZeroPivot(i);
+
 					// Divide it by diagonal entry
 					DivideRowByDiagonal(i);
 
@@ -174,6 +184,54 @@ namespace CSharpEnhanced.Maths
 				
 				// Also divide the free term by the entry
 				FreeTerms[row] = FreeTerms[row].Divide(divider);
+			}
+
+			/// <summary>
+			/// Makes sure that a nonzero entry is present in the pivot position (on tha main diagonal)
+			/// </summary>
+			/// <param name="row"></param>
+			private void GuaranteeNonZeroPivot(int row)
+			{
+				// If there already is a non-zero pivot element, simply return
+				if(Coefficients[row, row].Evaluate() != Complex.Zero)
+				{
+					return;
+				}
+
+				// For each row below
+				for(int i = row; i<Size; ++i)
+				{
+					// If the entry in the pivot column is non-zero
+					if(Coefficients[i, row].Evaluate() != Complex.Zero)
+					{
+						// Swap rows and finish
+						SwapRows(row, i);						
+						return;
+					}
+				}
+
+				throw new Exception("The system has infinitely many solutions");
+			}
+
+			/// <summary>
+			/// Swaps two rows
+			/// </summary>
+			/// <param name="row1"></param>
+			/// <param name="row2"></param>
+			private void SwapRows(int row1, int row2)
+			{
+				// Swap the free terms
+				var temp = FreeTerms[row1];
+				FreeTerms[row1] = FreeTerms[row2];
+				FreeTerms[row2] = temp;
+
+				// Swap the coefficients column by column
+				for (int i=0; i<Size; ++i)
+				{
+					temp = Coefficients[row1,i];
+					Coefficients[row1,i] = Coefficients[row2,i];
+					Coefficients[row2,i] = temp;
+				}
 			}
 
 			#endregion
