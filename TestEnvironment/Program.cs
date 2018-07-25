@@ -31,20 +31,7 @@ namespace TestEnvironment
 
 			//Console.Write($"\t = {exp.Evaluate()}");
 
-
-			var Coefficients = new IExpression[,] { { x, y, z}, { y, z, w}, { z, w, x } };
-			var FreeTerms = new IExpression[] { w, x, y};
-			//system.Coefficients = new IExpression[,] { { x, w }, { w, y } };
-			//system.FreeTerms = new IExpression[] { z, z };
-			Stopwatch s = new Stopwatch();
-			s.Start();
-			var solution = LinearEquations.SimplifiedGaussJordanElimination(Coefficients, FreeTerms);
-			s.Stop();
-			Console.WriteLine(s.ElapsedMilliseconds);
-
-			Console.WriteLine(solution[0].Evaluate());
-			Console.WriteLine(solution[1].Evaluate());
-			Console.WriteLine(solution[2].Evaluate());
+		
 			
 			Console.ReadLine();
 		}

@@ -9,17 +9,17 @@ namespace CSharpEnhanced.Maths
 	public partial class LinearEquations
     {
 		#region Public static methods
-
+				
 		/// <summary>
 		/// Solves a system of linear equations expected to have a unique solution
 		/// using a simplified Gauss-Jordan elimination (only the operations on matrix of coefficients that are
 		/// necessary to obtain the result are performed). The matrix of coefficients and the vector of free
 		/// terms are both modified in the process.
 		/// </summary>
-		public static IExpression[] SimplifiedGaussJordanElimination(IExpression[,] coefficients, IExpression[] freeTerms)
+		public static Complex[] SimplifiedGaussJordanElimination(Complex[,] coefficients, Complex[] freeTerms)
 		{
 			// Check for null
-			if(coefficients == null || freeTerms == null)
+			if (coefficients == null || freeTerms == null)
 			{
 				throw new ArgumentNullException();
 			}
@@ -52,13 +52,7 @@ namespace CSharpEnhanced.Maths
 		/// Helper class that can be used to solve a system of linear equations expected to have a unique solution
 		/// using a simplified Gauss-Jordan elimination (only the operations on matrix of coefficients that are
 		/// necessary to obtain the result are performed). The matrix of coefficients and the vector of free
-		/// terms are both modified in the process. It is important that the values of coefficients don't change in a way that
-		/// would cause a pivot entry to become 0 as this would invalidate the computed expressions. A good example of a situation
-		/// where this probably won't happen is an admittance matrix - every non-zero entry will remain non-zero because, if it
-		/// didn't then it means that the schematic was modified and a new admittance matrix needs to be constructed. Of cource, it
-		/// is possible that a specific combination of admittances will result in a pivot that was canceled out leading to division
-		/// by 0, but given that it's very unprobable it's probably easier to check if the solution for a given set of parameters is
-		/// correct and if not simply recompute the solution
+		/// terms are both modified in the process
 		/// </summary>
 		private class SimplifiedGaussJordanEliminationSolver : LinearEquations
 		{
@@ -67,7 +61,7 @@ namespace CSharpEnhanced.Maths
 			/// <summary>
 			/// Default Constructor
 			/// </summary>
-			public SimplifiedGaussJordanEliminationSolver(IExpression[,] coefficients, IExpression[] freeTerms)
+			public SimplifiedGaussJordanEliminationSolver(Complex[,] coefficients, Complex[] freeTerms)
 				: base(coefficients, freeTerms)	{ }
 
 			#endregion
@@ -139,22 +133,21 @@ namespace CSharpEnhanced.Maths
 			/// </summary>
 			/// <param name="rowToSubtractFrom">Row to subtract from</param>
 			/// <param name="rowToSubtract">Row to subtract</param>
-			/// <param name="multiplier"><see cref="IExpression"/> by which each subtracted entry is multiplied</param>
+			/// <param name="multiplier"><see cref="Complex"/> by which each subtracted entry is multiplied</param>
 			/// <param name="startFromColumn">Starts the operation from the column indexed by this value</param>
 			/// <param name="endAtColumn">Ends the operation at a column indexed by this value</param>
-			private void SubtractRows(int rowToSubtractFrom, int rowToSubtract, IExpression multiplier,
+			private void SubtractRows(int rowToSubtractFrom, int rowToSubtract, Complex multiplier,
 				int startFromColumn, int endAtColumn)
 			{
 				// For each chosen column
 				for (int i = startFromColumn; i < endAtColumn; ++i)
 				{
 					// Subtract the values
-					Coefficients[rowToSubtractFrom, i] =
-						Coefficients[rowToSubtractFrom, i].Subtract(Coefficients[rowToSubtract, i].Multiply(multiplier));
+					Coefficients[rowToSubtractFrom, i] -= Coefficients[rowToSubtract, i]*multiplier;
 				}
 
 				// Subtract the free terms
-				FreeTerms[rowToSubtractFrom] = FreeTerms[rowToSubtractFrom].Subtract(FreeTerms[rowToSubtract].Multiply(multiplier));
+				FreeTerms[rowToSubtractFrom] -= FreeTerms[rowToSubtract]*multiplier;
 			}
 
 			/// <summary>
@@ -162,9 +155,9 @@ namespace CSharpEnhanced.Maths
 			/// </summary>
 			/// <param name="rowToSubtractFrom">Row to subtract from</param>
 			/// <param name="rowToSubtract">Row to subtract</param>
-			/// <param name="multiplier"><see cref="IExpression"/> by which each subtracted entry is multiplied</param>
-			private void SubtractFreeTerms(int rowToSubtractFrom, int rowToSubtract, IExpression multiplier) =>
-				FreeTerms[rowToSubtractFrom] = FreeTerms[rowToSubtractFrom].Subtract(FreeTerms[rowToSubtract].Multiply(multiplier));
+			/// <param name="multiplier"><see cref="Complex"/> by which each subtracted entry is multiplied</param>
+			private void SubtractFreeTerms(int rowToSubtractFrom, int rowToSubtract, Complex multiplier) =>
+				FreeTerms[rowToSubtractFrom] -= FreeTerms[rowToSubtract]*multiplier;
 
 			/// <summary>
 			/// Divides all elements to the right of the main diagonal (including) as well as the free term
@@ -179,11 +172,11 @@ namespace CSharpEnhanced.Maths
 				// Divide each element in the row by it
 				for (int i = row; i < Size; ++i)
 				{
-					Coefficients[row, i] = Coefficients[row, i].Divide(divider);
+					Coefficients[row, i] /= divider;
 				}
 				
 				// Also divide the free term by the entry
-				FreeTerms[row] = FreeTerms[row].Divide(divider);
+				FreeTerms[row] /= divider;
 			}
 
 			/// <summary>
@@ -193,7 +186,7 @@ namespace CSharpEnhanced.Maths
 			private void GuaranteeNonZeroPivot(int row)
 			{
 				// If there already is a non-zero pivot element, simply return
-				if(Coefficients[row, row].Evaluate() != Complex.Zero)
+				if(Coefficients[row, row] != Complex.Zero)
 				{
 					return;
 				}
@@ -202,7 +195,7 @@ namespace CSharpEnhanced.Maths
 				for(int i = row; i<Size; ++i)
 				{
 					// If the entry in the pivot column is non-zero
-					if(Coefficients[i, row].Evaluate() != Complex.Zero)
+					if(Coefficients[i, row] != Complex.Zero)
 					{
 						// Swap rows and finish
 						SwapRows(row, i);						
@@ -235,7 +228,7 @@ namespace CSharpEnhanced.Maths
 			}
 
 			#endregion
-		}
+		}		
 
 		#endregion
 	}

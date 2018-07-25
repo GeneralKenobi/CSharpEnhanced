@@ -3,6 +3,8 @@
 // of this class. The implementations should expose static methods that use this base
 
 
+using System.Numerics;
+
 namespace CSharpEnhanced.Maths
 {
 	/// <summary>
@@ -16,7 +18,7 @@ namespace CSharpEnhanced.Maths
 		/// Default Constructor, methods that use it should make sure that the requirements they present for these
 		/// matrices are fulfilled
 		/// </summary>
-		protected LinearEquations(IExpression[,] coefficients, IExpression[] freeTerms)
+		protected LinearEquations(Complex[,] coefficients, Complex[] freeTerms)
 		{
 			Coefficients = coefficients;
 			FreeTerms = freeTerms;
@@ -29,12 +31,12 @@ namespace CSharpEnhanced.Maths
 		/// <summary>
 		/// Matrix of coefficients
 		/// </summary>
-		protected IExpression[,] Coefficients { get; set; }
+		protected Complex[,] Coefficients { get; set; }
 
 		/// <summary>
 		/// Matrix of free terms
 		/// </summary>
-		protected IExpression[] FreeTerms { get; set; }
+		protected Complex[] FreeTerms { get; set; }
 
 		/// <summary>
 		/// The size of the system - number of equations
