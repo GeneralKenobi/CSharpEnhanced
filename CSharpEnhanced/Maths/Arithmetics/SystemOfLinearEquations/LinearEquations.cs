@@ -20,8 +20,17 @@ namespace CSharpEnhanced.Maths
 		/// </summary>
 		protected LinearEquations(Complex[,] coefficients, Complex[] freeTerms)
 		{
-			Coefficients = coefficients;
-			FreeTerms = freeTerms;
+			// Assign the matrices
+			_Coefficients = coefficients;
+			_FreeTerms = freeTerms;
+
+			// Create and fill the vector denoting variables
+			_Variables = new int[_Size];
+
+			for(int i=0; i<_Size; ++i)
+			{
+				_Variables[i] = i;
+			}
 		}
 
 		#endregion
@@ -29,19 +38,25 @@ namespace CSharpEnhanced.Maths
 		#region Protected properties
 
 		/// <summary>
+		/// i-th cell contains index of a variable that is associated with i-th equation
+		/// (it's important to keep track when swapping rows)
+		/// </summary>
+		protected int[] _Variables { get; }
+
+		/// <summary>
 		/// Matrix of coefficients
 		/// </summary>
-		protected Complex[,] Coefficients { get; set; }
+		protected Complex[,] _Coefficients { get; set; }
 
 		/// <summary>
 		/// Matrix of free terms
 		/// </summary>
-		protected Complex[] FreeTerms { get; set; }
+		protected Complex[] _FreeTerms { get; set; }
 
 		/// <summary>
 		/// The size of the system - number of equations
 		/// </summary>
-		protected int Size => FreeTerms.Length;
+		protected int _Size => _FreeTerms.Length;
 
 		#endregion
 	}
