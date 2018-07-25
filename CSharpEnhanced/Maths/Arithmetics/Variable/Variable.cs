@@ -25,7 +25,7 @@ namespace CSharpEnhanced.Maths
 		/// </summary>
 		private Variable(Complex value)
 		{
-			_Value = new RefWrapper<Complex>();
+			_Value = new RefWrapper<Complex>(value);
 		}
 
 		/// <summary>
