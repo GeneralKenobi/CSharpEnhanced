@@ -31,11 +31,8 @@ namespace CSharpEnhanced.Maths
 				// Create a new solver instance
 				var solver = new SimplifiedGaussJordanEliminationSolver(coefficients, freeTerms);
 
-				// Perform necessary operations
-				solver.Solve();
-
-				// Return the result
-				return solver.FreeTerms;
+				// Perform necessary operations and return the result
+				return solver.Solve();
 			}
 			else
 			{
@@ -71,10 +68,12 @@ namespace CSharpEnhanced.Maths
 			/// <summary>
 			/// Solves the system (result is the vector of FreeTerms)
 			/// </summary>
-			public void Solve()
+			public Complex[] Solve()
 			{
 				ForwardElemination();
 				BackwardsElimination();
+
+				return GetStandardVariableOrderResult();
 			}
 
 			#endregion
@@ -90,7 +89,7 @@ namespace CSharpEnhanced.Maths
 			private void ForwardElemination()
 			{
 				// For each row
-				for (int i = 0; i < Size; ++i)
+				for (int i = 0; i < _Size; ++i)
 				{
 					// Make sure there is a non-zero entry on the main diagonal
 					GuaranteeNonZeroPivot(i);
@@ -101,9 +100,9 @@ namespace CSharpEnhanced.Maths
 					// For each column that is to the right of the diagonal entry (that still has non-zero entry)
 					// subtract the entries in corresponding rows (multiplier is chosen to obtain 0 below the
 					// entry on the main diagonal)
-					for (int j = i + 1; j < Size; ++j)
+					for (int j = i + 1; j < _Size; ++j)
 					{
-						SubtractRows(j, i, Coefficients[j, i], i + 1, Size);
+						SubtractRows(j, i, _Coefficients[j, i], i + 1, _Size);
 					}
 				}
 			}
@@ -117,13 +116,13 @@ namespace CSharpEnhanced.Maths
 			private void BackwardsElimination()
 			{
 				// Starting from the bottom for each row
-				for (int i = Size - 1; i >= 0; --i)
+				for (int i = _Size - 1; i >= 0; --i)
 				{
 					// Choose a coefficient that would result in a 0 in each entry above the entry on the main diagonal
 					// and subtract free terms only (no need to modify matrix of coefficients - increased efficiency)
 					for (int j = i - 1; j >= 0; --j)
 					{
-						SubtractFreeTerms(j, i, Coefficients[j, i]);
+						SubtractFreeTerms(j, i, _Coefficients[j, i]);
 					}
 				}
 			}
@@ -143,11 +142,11 @@ namespace CSharpEnhanced.Maths
 				for (int i = startFromColumn; i < endAtColumn; ++i)
 				{
 					// Subtract the values
-					Coefficients[rowToSubtractFrom, i] -= Coefficients[rowToSubtract, i]*multiplier;
+					_Coefficients[rowToSubtractFrom, i] -= _Coefficients[rowToSubtract, i]*multiplier;
 				}
 
 				// Subtract the free terms
-				FreeTerms[rowToSubtractFrom] -= FreeTerms[rowToSubtract]*multiplier;
+				_FreeTerms[rowToSubtractFrom] -= _FreeTerms[rowToSubtract]*multiplier;
 			}
 
 			/// <summary>
@@ -157,7 +156,7 @@ namespace CSharpEnhanced.Maths
 			/// <param name="rowToSubtract">Row to subtract</param>
 			/// <param name="multiplier"><see cref="Complex"/> by which each subtracted entry is multiplied</param>
 			private void SubtractFreeTerms(int rowToSubtractFrom, int rowToSubtract, Complex multiplier) =>
-				FreeTerms[rowToSubtractFrom] -= FreeTerms[rowToSubtract]*multiplier;
+				_FreeTerms[rowToSubtractFrom] -= _FreeTerms[rowToSubtract]*multiplier;
 
 			/// <summary>
 			/// Divides all elements to the right of the main diagonal (including) as well as the free term
@@ -167,16 +166,16 @@ namespace CSharpEnhanced.Maths
 			private void DivideRowByDiagonal(int row)
 			{
 				// Get the divider (entry on the main diagonal)
-				var divider = Coefficients[row, row];
+				var divider = _Coefficients[row, row];
 				
 				// Divide each element in the row by it
-				for (int i = row; i < Size; ++i)
+				for (int i = row; i < _Size; ++i)
 				{
-					Coefficients[row, i] /= divider;
+					_Coefficients[row, i] /= divider;
 				}
 				
 				// Also divide the free term by the entry
-				FreeTerms[row] /= divider;
+				_FreeTerms[row] /= divider;
 			}
 
 			/// <summary>
@@ -186,16 +185,16 @@ namespace CSharpEnhanced.Maths
 			private void GuaranteeNonZeroPivot(int row)
 			{
 				// If there already is a non-zero pivot element, simply return
-				if(Coefficients[row, row] != Complex.Zero)
+				if(_Coefficients[row, row] != Complex.Zero)
 				{
 					return;
 				}
 
 				// For each row below
-				for(int i = row; i<Size; ++i)
+				for(int i = row; i<_Size; ++i)
 				{
 					// If the entry in the pivot column is non-zero
-					if(Coefficients[i, row] != Complex.Zero)
+					if(_Coefficients[i, row] != Complex.Zero)
 					{
 						// Swap rows and finish
 						SwapRows(row, i);						
@@ -214,17 +213,38 @@ namespace CSharpEnhanced.Maths
 			private void SwapRows(int row1, int row2)
 			{
 				// Swap the free terms
-				var temp = FreeTerms[row1];
-				FreeTerms[row1] = FreeTerms[row2];
-				FreeTerms[row2] = temp;
+				var temp = _FreeTerms[row1];
+				_FreeTerms[row1] = _FreeTerms[row2];
+				_FreeTerms[row2] = temp;
 
 				// Swap the coefficients column by column
-				for (int i=0; i<Size; ++i)
+				for (int i=0; i<_Size; ++i)
 				{
-					temp = Coefficients[row1,i];
-					Coefficients[row1,i] = Coefficients[row2,i];
-					Coefficients[row2,i] = temp;
+					temp = _Coefficients[row1,i];
+					_Coefficients[row1,i] = _Coefficients[row2,i];
+					_Coefficients[row2,i] = temp;
 				}
+
+				// Keep track of the swapped rows
+				var tempIndex = _Variables[row1];
+				_Variables[row1] = _Variables[row2];
+				_Variables[row2] = tempIndex;
+			}
+
+			/// <summary>
+			/// Returns a vector of results in a standard (rising) order (x0, x1, x2...)
+			/// </summary>
+			/// <returns></returns>
+			private Complex[] GetStandardVariableOrderResult()
+			{
+				Complex[] result = new Complex[_Size];
+
+				for(int i=0; i<_Size; ++i)
+				{
+					result[_Variables[i]] = _FreeTerms[_Variables[i]];
+				}
+
+				return result;
 			}
 
 			#endregion
