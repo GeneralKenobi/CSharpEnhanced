@@ -7,7 +7,7 @@ namespace CSharpEnhanced.Maths
 	/// </summary>
 	public static class MathsHelpers
     {
-		#region Public methods
+		#region Public static methods
 
 		/// <summary>
 		/// Reduces unnecessary turns so that the angle is in the first turn. Returns the corrected value
@@ -83,6 +83,82 @@ namespace CSharpEnhanced.Maths
 		/// <param name="ceilingTo">Number whose multiple to round up to</param>
 		/// <returns></returns>
 		public static double CeilingTo(this double value, double ceilingTo) => Math.Ceiling(value / ceilingTo) * ceilingTo;
+
+		/// <summary>
+		/// Returns a double number rounded to the given digit
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>
+		/// <param name="rounding"></param>
+		/// <returns></returns>
+		public static double RoundToDigit(this double value, int digit, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+		{
+			// Get the order of the value (value = x * 10^order, 1 <= x < 10)
+			var order =  Math.Floor(Math.Log10(Math.Abs(value)));
+
+			// Round the value after multiplying it by the given power of 10 (this action ensures that the digit to round to is
+			// the one on the left of the decimal), if value is <1 then the order used should be 0
+			value = Math.Round(value * Math.Pow(10, digit - Math.Max(order,0) - 1), rounding);
+
+			// Finally divide the value by 10 to power which is a difference of the newly obtained order and the previous order,
+			// this recovers the order from the beginning of the method (not necessary if the rounding resulted in 0)
+			if (value != 0)
+			{
+				value /= Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) - order);
+			}
+
+			return value;
+		}
+
+		/// <summary>
+		/// Returns a double number rounded down to the given digit
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>
+		/// <returns></returns>
+		public static double FloorToDigit(this double value, int digit)
+		{
+			// Get the order of the value (value = x * 10^order, 1 <= x < 10)
+			var order = Math.Floor(Math.Log10(Math.Abs(value)));
+
+			// Round the value after multiplying it by the given power of 10 (this action ensures that the digit to round to is
+			// the one on the left of the decimal), if value is <1 then the order used should be 0
+			value = Math.Floor(value * Math.Pow(10, digit - Math.Max(order, 0) - 1));
+
+			// Finally divide the value by 10 to power which is a difference of the newly obtained order and the previous order,
+			// this recovers the order from the beginning of the method (not necessary if the rounding resulted in 0)
+			if (value != 0)
+			{
+				value /= Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) - order);
+			}
+
+			return value;
+		}
+
+		/// <summary>
+		/// Returns a double number rounded up to the given digit
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>
+		/// <returns></returns>
+		public static double CeilingToDigit(this double value, int digit)
+		{
+			// Get the order of the value (value = x * 10^order, 1 <= x < 10)
+			var order = Math.Floor(Math.Log10(Math.Abs(value)));
+
+			// Round the value after multiplying it by the given power of 10 (this action ensures that the digit to round to is
+			// the one on the left of the decimal), if value is <1 then the order used should be 0
+			value = Math.Ceiling(value * Math.Pow(10, digit - Math.Max(order, 0) - 1));
+
+			// Finally divide the value by 10 to power which is a difference of the newly obtained order and the previous order,
+			// this recovers the order from the beginning of the method (not necessary if the rounding resulted in 0)
+			if (value != 0)
+			{
+				value /= Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) - order);
+			}
+
+			return value;
+		}
 
 		#endregion
 	}
