@@ -99,7 +99,7 @@ namespace CSharpEnhanced.Maths
 				get => mPhase;
 				set
 				{
-					value = Helpers.ReduceAngle(value);
+					value = MathsHelpers.ReduceAngle(value);
 
 					if (mPhase != value)
 					{
