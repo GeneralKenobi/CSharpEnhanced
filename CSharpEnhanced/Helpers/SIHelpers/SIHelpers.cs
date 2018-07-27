@@ -134,11 +134,20 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIString(double value, string unit, bool useFullName = false)
-		{
-			// Get the closes prefix
-			var prefix = GetClosestPrefix(value);
+		public static string ToSIString(double value, string unit, bool useFullName = false) =>
+			// Get the closest prefix
+			ToSIString(value, unit, GetClosestPrefix(value), useFullName);
 
+		/// <summary>
+		/// Returns a string representation with SI unit included with the given prefix
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="unit"></param>
+		/// <param name="prefix"></param>
+		/// <param name="useFullName"></param>
+		/// <returns></returns>
+		public static string ToSIString(double value, string unit, SIPrefix prefix, bool useFullName = false)
+		{
 			// Modify the value to match it
 			value /= Math.Pow(10, prefix.Base10Power);
 
@@ -154,17 +163,9 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, bool useFullName = false)
-		{
+		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, bool useFullName = false) =>
 			// Get the closes prefix
-			var prefix = GetClosestPrefixExcludingSmall(value);
-
-			// Modify the value to match it
-			value /= Math.Pow(10, prefix.Base10Power);
-
-			// Return it plus prefix name (or symbol) and unit
-			return value.ToString() + (useFullName ? prefix.Name : prefix.Symbol) + unit;
-		}
+			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), useFullName);
 
 		#endregion
 	}
