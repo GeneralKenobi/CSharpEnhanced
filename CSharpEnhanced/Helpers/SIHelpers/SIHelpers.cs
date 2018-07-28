@@ -113,6 +113,12 @@ namespace CSharpEnhanced.Helpers
 		/// <returns></returns>
 		public static SIPrefix GetClosestPrefix(double value)
 		{
+			// If the value is 0 return no prefix instead of the smallest one
+			if(value == 0)
+			{
+				return GetPrefix(0);
+			}
+
 			// Take the logarithm of the value to find the necessary power for 10 (floor it to have the result with at least 1 in
 			// front of the unit)
 			var base10Power = Math.Floor(Math.Log10(Math.Abs(value)));
