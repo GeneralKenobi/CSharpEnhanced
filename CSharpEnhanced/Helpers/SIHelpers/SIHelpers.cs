@@ -93,7 +93,7 @@ namespace CSharpEnhanced.Helpers
 		{
 			value = Math.Abs(value);
 
-			if (value < 1e-3 || value > 1e+3)
+			if (value <= 1e-3 || value >= 1e+3)
 			{
 				return GetClosestPrefix(value);
 			}

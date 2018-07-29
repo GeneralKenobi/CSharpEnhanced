@@ -14,10 +14,11 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			var prefix = SIHelpers.GetClosestPrefix(0);
+			var prefix = SIHelpers.GetClosestPrefixExcludingSmall(1000);
 
-			Console.WriteLine(SIHelpers.ToSIString(0, "V"));
-			Console.WriteLine(SIHelpers.ToSIStringExcludingSmallPrefixes(0, "V"));
+			Console.WriteLine(SIHelpers.ToSIString(1000, "V"));
+			Console.WriteLine(SIHelpers.ToSIStringExcludingSmallPrefixes(1000, "V"));
+			Console.WriteLine(SIHelpers.ToSIStringExcludingSmallPrefixes(-1000, "V"));
 
 			Console.ReadLine();
 		}
