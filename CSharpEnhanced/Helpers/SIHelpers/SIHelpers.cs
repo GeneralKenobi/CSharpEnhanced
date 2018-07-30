@@ -247,7 +247,10 @@ namespace CSharpEnhanced.Helpers
 			}
 
 			// Remove everything that is after the last digit (make sure not to pass an index equal to or greater to length)
-			s = s.Remove(Math.Min(lastDigitIndex + 1, s.Length - 1));
+			if(lastDigitIndex != s.Length - 1)
+			{
+				s = s.Remove(lastDigitIndex + 1);
+			}
 			
 			// Try to parse the result
 			if(double.TryParse(s, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,

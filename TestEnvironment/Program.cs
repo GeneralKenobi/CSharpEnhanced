@@ -15,6 +15,7 @@ namespace TestEnvironment
 		static void Main(string[] args)
 		{
 			string[] s = new string[] {
+					"12",
 					"1141kV",
 					"11.41kV",
 					"11.41V",
