@@ -14,11 +14,27 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			var prefix = SIHelpers.GetClosestPrefixExcludingSmall(1000);
+			string[] s = new string[] {
+					"1141kV",
+					"11.41kV",
+					"11.41V",
+					"11.41 V",
+					"11.41kVdadaw",
+					"1dwadaw1.41kV",
+					"kV",
+					"",
+					null,					
+					"11,41kV",
+					"11,41V",
+					"11,41 V",
+					"11,41kVdadaw",
+				};
 
-			Console.WriteLine(SIHelpers.ToSIString(1000, "V"));
-			Console.WriteLine(SIHelpers.ToSIStringExcludingSmallPrefixes(1000, "V"));
-			Console.WriteLine(SIHelpers.ToSIStringExcludingSmallPrefixes(-1000, "V"));
+			foreach(var item in s)
+			{
+				Console.Write(SIHelpers.TryParseSIString(item, out double result));
+				Console.WriteLine("\t" + result.ToString());
+			}
 
 			Console.ReadLine();
 		}

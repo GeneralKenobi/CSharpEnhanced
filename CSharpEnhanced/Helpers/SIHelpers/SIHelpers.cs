@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CSharpEnhanced.Maths;
 
@@ -19,6 +20,7 @@ namespace CSharpEnhanced.Helpers
 		{
 			_MinimumPrefixPower = _Prefixes.Min((prefix) => prefix.Base10Power);
 			_MaximumPrefixPower = _Prefixes.Max((prefix) => prefix.Base10Power);
+			_EmptyPrefix = _Prefixes.Find((prefix) => prefix.Base10Power == 0);
 		}
 
 		#endregion
@@ -34,6 +36,11 @@ namespace CSharpEnhanced.Helpers
 		/// The maximum power for which a prefix is defined
 		/// </summary>
 		private static int _MaximumPrefixPower { get; }
+
+		/// <summary>
+		/// Empty prefix which in fact does not change the value
+		/// </summary>
+		private static SIPrefix _EmptyPrefix { get; }
 
 		/// <summary>
 		/// Backing store for <see cref="Prefixes"/>; contains all prefixed defined in SI system
@@ -172,6 +179,88 @@ namespace CSharpEnhanced.Helpers
 		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, bool useFullName = false) =>
 			// Get the closes prefix
 			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), useFullName);
+
+		/// <summary>
+		/// Parses the string as an SI string, returns the value on success or throws an exception on failure. Everything behind the
+		/// prefix is considered to be the unit (eg. for "11.31kadwadaw" the "k" will be considered the prefix and "adwadaw" will be
+		/// considered the unit, eg. for  22.415adwadaw "adwadaw" will again be considered as the unit (because the prefix is not
+		/// present))
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
+		public static double ParseSIString(string s)
+		{
+			if (TryParseSIString(s, out double result))
+			{
+				return result;
+			}
+
+			throw new ArgumentException(nameof(s) + " is not an SI string");
+		}
+
+		/// <summary>
+		/// Tries to parse the string as an SI string, returns true on success (and assigns the parsed value to result) and false
+		/// on failure (assigns 0 to result). Everything behind the prefix is considered to be the unit (eg. for "11.31kadwadaw"
+		/// the "k" will be considered the prefix and "adwadaw" will be considered the unit, eg. for  22.415adwadaw "adwadaw" will
+		/// again be considered as the unit (because the prefix is not present))
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
+		public static bool TryParseSIString(string s, out double result)
+		{
+			// Assign default result
+			result = 0;
+			
+			// Check for null
+			if (s == null)
+			{
+				return false;
+			}
+
+			// Remove white spaces
+			s = s.Replace(" ", string.Empty);
+
+			// Swap the commas to dots to standardize the input
+			s = s.Replace(",", ".");
+
+			// Get the index of the last digit
+			var lastDigitIndex = s.LastIndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+
+			// Tro to get the prefix (excluding the empty prefix)
+			var prefix = _Prefixes.Find((entry) => entry != _EmptyPrefix &&
+				(s.IndexOf(entry.Symbol) == lastDigitIndex + 1 || s.IndexOf(entry.Name) == lastDigitIndex + 1));
+
+			// Check if it was found
+			if (prefix == null)
+			{
+				// If not, assign the empty prefix
+				prefix = _EmptyPrefix;
+			}
+
+			// If the prefix symbol/name is not on the beginning of the unit string then it was a false posotive or if,
+			// due to manipulations, the string became empty (no numbers) return failure
+			if (string.IsNullOrWhiteSpace(s))
+			{
+				return false;
+			}
+
+			// Remove everything that is after the last digit (make sure not to pass an index equal to or greater to length)
+			s = s.Remove(Math.Min(lastDigitIndex + 1, s.Length - 1));
+			
+			// Try to parse the result
+			if(double.TryParse(s, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+				CultureInfo.InvariantCulture, out result))
+			{
+				// If successful, multiply the result by a 10 with proper power
+				result *= Math.Pow(10, prefix.Base10Power);
+				return true;
+			}
+
+			// The string is not an SIString
+			return false;
+		}
 
 		#endregion
 	}
