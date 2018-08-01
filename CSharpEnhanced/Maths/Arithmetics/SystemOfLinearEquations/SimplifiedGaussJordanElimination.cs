@@ -92,7 +92,7 @@ namespace CSharpEnhanced.Maths
 				for (int i = 0; i < _Size; ++i)
 				{
 					// Make sure there is a non-zero entry on the main diagonal
-					GuaranteeNonZeroPivot(i);
+					FindBestPivot(i);
 
 					// Divide it by diagonal entry
 					DivideRowByDiagonal(i);
@@ -179,30 +179,38 @@ namespace CSharpEnhanced.Maths
 			}
 
 			/// <summary>
-			/// Makes sure that a nonzero entry is present in the pivot position (on tha main diagonal)
+			/// Puts the greatest magnitude element from the pivot column into the pivot row
+			/// (swaps rows, it's done to avoid catastrophic cancellation)
 			/// </summary>
 			/// <param name="row"></param>
-			private void GuaranteeNonZeroPivot(int row)
+			private void FindBestPivot(int row)
 			{
-				// If there already is a non-zero pivot element, simply return
-				if(_Coefficients[row, row] != Complex.Zero)
-				{
-					return;
-				}
+				// Assume the initial element as the pivot
+				int greatestMagnitude = row;
 
 				// For each row below
-				for(int i = row; i<_Size; ++i)
+				for(int i= row + 1; i<_Size; ++i)
 				{
-					// If the entry in the pivot column is non-zero
-					if(_Coefficients[i, row] != Complex.Zero)
+					// If it has a greater magnitude
+					if(_Coefficients[i, row].Magnitude > _Coefficients[greatestMagnitude, row].Magnitude)
 					{
-						// Swap rows and finish
-						SwapRows(row, i);						
-						return;
+						// Choose it to be the pivot
+						greatestMagnitude = i;
 					}
 				}
 
-				throw new Exception("The system has infinitely many solutions");
+				// If a new pivot was found
+				if (greatestMagnitude != row)
+				{
+					// Swap rows
+					SwapRows(row, greatestMagnitude);
+				}
+
+				// Throw if there was no coefficient with magnitude greater than 0
+				if (_Coefficients[row, row] == Complex.Zero)
+				{
+					throw new Exception("The system has infinitely many solutions");
+				}
 			}
 
 			/// <summary>
