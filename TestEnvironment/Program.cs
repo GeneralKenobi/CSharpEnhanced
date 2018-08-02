@@ -14,9 +14,15 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			double d = 0.00999997000009;
+			double d1 = 9.99997000009;
+			double d2 = 0.00999997000009;
+			double d3 = 100;
+			double d4 = 0.1;
 
-			Console.WriteLine(MathsHelpers.RoundToDigit(d, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d1, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d2, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d3, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d4, 4));
 
 
 

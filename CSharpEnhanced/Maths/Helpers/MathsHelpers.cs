@@ -94,29 +94,33 @@ namespace CSharpEnhanced.Maths
 		public static double RoundToDigit(this double value, int digit, MidpointRounding rounding = MidpointRounding.AwayFromZero)
 		{
 			// Get the order of the value (value = x * 10^order, 1 <= x < 10)
-			var order =  Math.Floor(Math.Log10(Math.Abs(value)));
+			var order = Math.Log10(Math.Abs(value));
+
+			// Round it
+			var roundedOrder =  Math.Floor(order);
 
 			// Round the value after multiplying it by the given power of 10 (this action ensures that the digit to round to is
 			// the one on the left of the decimal), if value is <1 then the order used should be 0
-			value = Math.Round(value * Math.Pow(10, digit - Math.Max(order,0) - 1), rounding);
+			var roundedValue = Math.Round(value * Math.Pow(10, digit - Math.Max(roundedOrder,0) - 1), rounding);
 
 			// Finally divide the value by 10 to power which is a difference of the newly obtained order and the previous order,
 			// this recovers the order from the beginning of the method (not necessary if the rounding resulted in 0)
-			if (value != 0)
+			if (roundedValue != 0)
 			{
-				var log = Math.Log10(Math.Abs(value));
+				// Get the order of the new value
+				var newOrder = Math.Log10(Math.Abs(roundedValue));
 
-				// If the log is an integer it means that rounded value was a multiple of 10 and will result in a log greater by 1 than
-				// actually needed
-				if(log == Math.Floor(log))
+				// If the log is an integer it means that rounded value was a power of 10 and will result in a log greater by 1 than
+				// actually needed (unless the original value was a power of 10)
+				if(newOrder == Math.Floor(newOrder) && order != Math.Floor(roundedOrder))
 				{
-					--log;
+					--newOrder;
 				}
 
-				value /= Math.Pow(10, Math.Floor(log) - order);
+				roundedValue /= Math.Pow(10, Math.Floor(newOrder) - roundedOrder);
 			}
 
-			return value;
+			return roundedValue;
 		}
 
 		/// <summary>
