@@ -104,7 +104,16 @@ namespace CSharpEnhanced.Maths
 			// this recovers the order from the beginning of the method (not necessary if the rounding resulted in 0)
 			if (value != 0)
 			{
-				value /= Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) - order);
+				var log = Math.Log10(Math.Abs(value));
+
+				// If the log is an integer it means that rounded value was a multiple of 10 and will result in a log greater by 1 than
+				// actually needed
+				if(log == Math.Floor(log))
+				{
+					--log;
+				}
+
+				value /= Math.Pow(10, Math.Floor(log) - order);
 			}
 
 			return value;

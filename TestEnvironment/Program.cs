@@ -14,28 +14,11 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			string[] s = new string[] {
-					"12",
-					"1141kV",
-					"11.41kV",
-					"11.41V",
-					"11.41 V",
-					"11.41kVdadaw",
-					"1dwadaw1.41kV",
-					"kV",
-					"",
-					null,					
-					"11,41kV",
-					"11,41V",
-					"11,41 V",
-					"11,41kVdadaw",
-				};
+			double d = 0.00999997000009;
 
-			foreach(var item in s)
-			{
-				Console.Write(SIHelpers.TryParseSIString(item, out double result));
-				Console.WriteLine("\t" + result.ToString());
-			}
+			Console.WriteLine(MathsHelpers.RoundToDigit(d, 4));
+
+
 
 			Console.ReadLine();
 		}
