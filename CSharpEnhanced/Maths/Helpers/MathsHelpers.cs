@@ -111,8 +111,9 @@ namespace CSharpEnhanced.Maths
 				var newOrder = Math.Log10(Math.Abs(roundedValue));
 
 				// If the log is an integer it means that rounded value was a power of 10 and will result in a log greater by 1 than
-				// actually needed (unless the original value was a power of 10)
-				if(newOrder == Math.Floor(newOrder) && order != Math.Floor(roundedOrder))
+				// actually needed (unless the original value was a power of 10 or difference between it and the neighbouring power
+				// of 10 was smaller than 10^(-digit) which is represented by the second condition).				
+				if (newOrder == Math.Floor(newOrder) && value - Math.Pow(10, roundedOrder) > Math.Pow(10, -digit))
 				{
 					--newOrder;
 				}
