@@ -84,6 +84,8 @@ namespace CSharpEnhanced.Helpers
 
 		#region Public static methods
 
+		#region Get prefix methods
+
 		/// <summary>
 		/// Returns a prefix matching the given base10 power
 		/// </summary>
@@ -159,6 +161,9 @@ namespace CSharpEnhanced.Helpers
 		public static SIPrefix GetClosestPrefix(Complex value) =>
 			GetClosestPrefix(Math.Max(Math.Abs(value.Real), Math.Abs(value.Imaginary)));
 
+		#endregion
+
+		#region ToSIString for doubles
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the most fitting prefix
@@ -187,6 +192,22 @@ namespace CSharpEnhanced.Helpers
 			// Return it plus prefix name (or symbol) and unit
 			return value.ToString() + (useFullName ? prefix.Name : prefix.Symbol) + unit;
 		}
+		
+		/// <summary>
+		/// Returns a string representation with SI unit included with the most fitting prefix, excluding prefixes with Base10Power
+		/// absolute value smaller than 3 (exception: 0)
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="unit"></param>
+		/// <param name="useFullName"></param>
+		/// <returns></returns>
+		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, bool useFullName = false) =>
+			// Get the closes prefix
+			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), useFullName);
+
+		#endregion
+
+		#region ToSIString for Complex numbers
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the most fitting prefix, excluding prefixes with Base10Power
@@ -230,11 +251,13 @@ namespace CSharpEnhanced.Helpers
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the most fitting prefix, excluding prefixes with Base10Power
-		/// absolute value smaller than 3 (exception: 0)
+		/// absolute value smaller than 3 (exception: 0). Alternative number complex number string representation is given as a sum
+		/// instead of a coordinate on the complex plane, eg: (24+5i)kV
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
+		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
 		public static string ToAltSIStringExcludingSmallPrefixes(Complex value, string unit, bool useFullName = false,
 			bool imaginaryAsJ = false) =>
@@ -242,11 +265,13 @@ namespace CSharpEnhanced.Helpers
 			ToAltSIString(value, unit, GetClosestPrefixExcludingSmall(value), useFullName, imaginaryAsJ);
 
 		/// <summary>
-		/// Returns a string representation with SI unit included with the most fitting prefix
+		/// Returns a string representation with SI unit included with the most fitting prefix. Alternative number complex number
+		/// string representation is given as a sum instead of a coordinate on the complex plane, eg: (24+5i)kV
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
+		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
 		public static string ToAltSIString(Complex value, string unit, bool useFullName = false,
 			bool imaginaryAsJ = false) =>
@@ -254,12 +279,14 @@ namespace CSharpEnhanced.Helpers
 			ToAltSIString(value, unit, GetClosestPrefix(value), useFullName, imaginaryAsJ);
 
 		/// <summary>
-		/// Returns a string representation with SI unit included with the given prefix
+		/// Returns a string representation with SI unit included with the given prefix. Alternative number complex number string
+		/// representation is given as a sum instead of a coordinate on the complex plane, eg: (24+5i)kV
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="unit"></param>
 		/// <param name="prefix"></param>
 		/// <param name="useFullName"></param>
+		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
 		public static string ToAltSIString(Complex value, string unit, SIPrefix prefix, bool useFullName = false,
 			bool imaginaryAsJ = false)
@@ -303,17 +330,9 @@ namespace CSharpEnhanced.Helpers
 			return result;
 		}
 
-		/// <summary>
-		/// Returns a string representation with SI unit included with the most fitting prefix, excluding prefixes with Base10Power
-		/// absolute value smaller than 3 (exception: 0)
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="unit"></param>
-		/// <param name="useFullName"></param>
-		/// <returns></returns>
-		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, bool useFullName = false) =>
-			// Get the closes prefix
-			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), useFullName);
+		#endregion
+
+		#region SIString parsing
 
 		/// <summary>
 		/// Parses the string as an SI string, returns the value on success or throws an exception on failure. Everything behind the
@@ -399,6 +418,8 @@ namespace CSharpEnhanced.Helpers
 			// The string is not an SIString
 			return false;
 		}
+
+		#endregion
 
 		#endregion
 	}
