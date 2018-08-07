@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CSharpEnhanced.Maths
 {
@@ -173,6 +174,37 @@ namespace CSharpEnhanced.Maths
 
 			return value;
 		}
+
+		/// <summary>
+		/// Returns a Complex number rounded to the given digit (both real and imaginary parts are rounded)
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>
+		/// <param name="rounding"></param>
+		/// <returns></returns>
+		public static Complex RoundToDigit(this Complex value, int digit, MidpointRounding rounding = MidpointRounding.AwayFromZero) =>
+			// Use the method created for doubles to round both real and imaginary parts
+			new Complex(value.Real.RoundToDigit(digit, rounding), value.Imaginary.RoundToDigit(digit, rounding));
+
+		/// <summary>
+		/// Returns a Complex number rounded down to the given digit (both real and imaginary parts are rounded)
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>		
+		/// <returns></returns>
+		public static Complex FloorToDigit(this Complex value, int digit) =>
+			// Use the method created for doubles to round both real and imaginary parts
+			new Complex(value.Real.FloorToDigit(digit), value.Imaginary.FloorToDigit(digit));
+
+		/// <summary>
+		/// Returns a Complex number rounded up to the given digit (both real and imaginary parts are rounded)
+		/// </summary>
+		/// <param name="value">Number to round</param>
+		/// <param name="digit">Digit to round the number to</param>		
+		/// <returns></returns>
+		public static Complex CeilingToDigit(this Complex value, int digit) =>
+			// Use the method created for doubles to round both real and imaginary parts
+			new Complex(value.Real.CeilingToDigit(digit), value.Imaginary.CeilingToDigit(digit));
 
 		#endregion
 	}
