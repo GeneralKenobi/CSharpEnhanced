@@ -14,7 +14,9 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			
+			string s = "5uV";
+
+			var ss = SIHelpers.ParseSIString(s);
 			
 			Complex c = new Complex(0, 0);
 			Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "V"));

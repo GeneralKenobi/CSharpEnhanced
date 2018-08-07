@@ -342,8 +342,9 @@ namespace CSharpEnhanced.Helpers
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="result"></param>
+		/// <param name="simplifiedMicro">If true when determining prefix "u" will be considered as "µ"</param>
 		/// <returns></returns>
-		public static double ParseSIString(string s)
+		public static double ParseSIString(string s, bool simplifiedMicro = true)
 		{
 			if (TryParseSIString(s, out double result))
 			{
@@ -361,8 +362,9 @@ namespace CSharpEnhanced.Helpers
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="result"></param>
+		/// <param name="simplifiedMicro">If true when determining prefix "u" will be considered as "µ"</param>
 		/// <returns></returns>
-		public static bool TryParseSIString(string s, out double result)
+		public static bool TryParseSIString(string s, out double result, bool simplifiedMicro = true)
 		{
 			// Assign default result
 			result = 0;
@@ -378,6 +380,12 @@ namespace CSharpEnhanced.Helpers
 
 			// Swap the commas to dots to standardize the input
 			s = s.Replace(",", ".");
+
+			// If simplified micro symbol is enabled replace all u with µ
+			if (simplifiedMicro)
+			{
+				s = s.Replace("u", "µ");
+			}
 
 			// Get the index of the last digit
 			var lastDigitIndex = s.LastIndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
