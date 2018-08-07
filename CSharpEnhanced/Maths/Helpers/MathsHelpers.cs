@@ -10,6 +10,8 @@ namespace CSharpEnhanced.Maths
     {
 		#region Public static methods
 
+		#region Angle reduction
+
 		/// <summary>
 		/// Reduces unnecessary turns so that the angle is in the first turn. Returns the corrected value
 		/// </summary>
@@ -59,6 +61,10 @@ namespace CSharpEnhanced.Maths
 			}
 		}
 
+		#endregion
+
+		#region Rounding to a multiple
+
 		/// <summary>
 		/// Returns a double number rounded to the nearest multiple of <paramref name="roundTo"/>
 		/// </summary>
@@ -84,6 +90,10 @@ namespace CSharpEnhanced.Maths
 		/// <param name="ceilingTo">Number whose multiple to round up to</param>
 		/// <returns></returns>
 		public static double CeilingTo(this double value, double ceilingTo) => Math.Ceiling(value / ceilingTo) * ceilingTo;
+
+		#endregion
+
+		#region Rounding to digit
 
 		/// <summary>
 		/// Returns a double number rounded to the given digit
@@ -205,6 +215,8 @@ namespace CSharpEnhanced.Maths
 		public static Complex CeilingToDigit(this Complex value, int digit) =>
 			// Use the method created for doubles to round both real and imaginary parts
 			new Complex(value.Real.CeilingToDigit(digit), value.Imaginary.CeilingToDigit(digit));
+
+		#endregion
 
 		#endregion
 	}
