@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace CSharpEnhanced.Maths
@@ -16,7 +17,12 @@ namespace CSharpEnhanced.Maths
 		/// necessary to obtain the result are performed). The matrix of coefficients and the vector of free
 		/// terms are both modified in the process.
 		/// </summary>
-		public static Complex[] SimplifiedGaussJordanElimination(Complex[,] coefficients, Complex[] freeTerms)
+		/// <param name="coefficients"></param>
+		/// <param name="freeTerms"></param>
+		/// <param name="ignoreIdentityEquations">If true, identity equations that just take up space (as in, i-th row, i-th column
+		/// and i-th free term are all zero) are ignored and when giving the result i-th variable is set to 0</param>
+		public static Complex[] SimplifiedGaussJordanElimination(Complex[,] coefficients, Complex[] freeTerms,
+			bool ignoreIdentityEquations)
 		{
 			// Check for null
 			if (coefficients == null || freeTerms == null)
@@ -29,7 +35,7 @@ namespace CSharpEnhanced.Maths
 				coefficients.GetLength(1) == freeTerms.Length)
 			{
 				// Create a new solver instance
-				var solver = new SimplifiedGaussJordanEliminationSolver(coefficients, freeTerms);
+				var solver = new SimplifiedGaussJordanEliminationSolver(coefficients, freeTerms, ignoreIdentityEquations);
 
 				// Perform necessary operations and return the result
 				return solver.Solve();
@@ -58,8 +64,32 @@ namespace CSharpEnhanced.Maths
 			/// <summary>
 			/// Default Constructor
 			/// </summary>
-			public SimplifiedGaussJordanEliminationSolver(Complex[,] coefficients, Complex[] freeTerms)
-				: base(coefficients, freeTerms)	{ }
+			public SimplifiedGaussJordanEliminationSolver(Complex[,] coefficients, Complex[] freeTerms, bool ignoreIdentityEquations)
+				: base(coefficients, freeTerms)
+			{
+				// If ignoring identity equations, get the list of all of them, otherwise use empty list (no equations are identity
+				// equations)
+				_IdentityEquationsCount = ignoreIdentityEquations ? FindAndRepositionIdentityEquations() : 0;
+			}
+
+			#endregion
+
+			#region Private properties
+
+			/// <summary>
+			/// Number of identity equations in the system (if they are not ignored it will be 0)
+			/// </summary>
+			private int _IdentityEquationsCount { get; }
+
+			/// <summary>
+			/// Hides the actual size, returns it but reduced by the number of identity equations
+			/// </summary>
+			private int _AdjustedSize => _Size - _IdentityEquationsCount;
+
+			/// <summary>
+			/// Stores information about swapped column
+			/// </summary>
+			private List<Tuple<int,int>> _ColumnSwaps { get; } = new List<Tuple<int, int>>();
 
 			#endregion
 
@@ -79,6 +109,52 @@ namespace CSharpEnhanced.Maths
 			#endregion
 
 			#region Private methods
+			
+			/// <summary>
+			/// Returns true if the equation is an identity equation (0 == 0). The condition is that all entries in
+			/// <paramref name="equationNumber"/> row (including free termins) and all entries in <paramref name="equationNumber"/>
+			/// column are 0
+			/// </summary>
+			/// <param name="equationNumber"></param>
+			/// <returns></returns>
+			private bool IsIdentityEquation(int equationNumber)
+			{
+				for (int i = 0; i < _Size; ++i)
+				{
+					if(_Coefficients[equationNumber, i] != 0 || _Coefficients[i, equationNumber] != 0)
+					{
+						return false;
+					}
+				}
+
+				return _FreeTerms[equationNumber] == 0;
+			}
+
+			/// <summary>
+			/// Returns a list with all found identity equations
+			/// </summary>
+			/// <returns></returns>
+			private int FindAndRepositionIdentityEquations()
+			{
+				int foundIdentityEquationsCount = 0;
+
+				for(int i=0; i<_Size - foundIdentityEquationsCount; ++i)
+				{
+					if(IsIdentityEquation(i))
+					{
+						// Swap it with the last non-identity row
+						SwapRows(i, _Size - foundIdentityEquationsCount - 1);
+						// Swap it with the last non-identity column
+						SwapColumns(i, _Size - foundIdentityEquationsCount - 1);
+						// Increase the count
+						++foundIdentityEquationsCount;
+						// Reduce i to consider the newly swapped row/column
+						--i;
+					}
+				}
+
+				return foundIdentityEquationsCount;
+			}
 
 			/// <summary>
 			/// Performs forward elimination on the system - matrix is brought into the reduced lower-triangular form
@@ -89,7 +165,7 @@ namespace CSharpEnhanced.Maths
 			private void ForwardElemination()
 			{
 				// For each row
-				for (int i = 0; i < _Size; ++i)
+				for (int i = 0; i < _AdjustedSize; ++i)
 				{
 					// Make sure there is a non-zero entry on the main diagonal
 					FindBestPivot(i);
@@ -100,9 +176,9 @@ namespace CSharpEnhanced.Maths
 					// For each column that is to the right of the diagonal entry (that still has non-zero entry)
 					// subtract the entries in corresponding rows (multiplier is chosen to obtain 0 below the
 					// entry on the main diagonal)
-					for (int j = i + 1; j < _Size; ++j)
+					for (int j = i + 1; j < _AdjustedSize; ++j)
 					{
-						SubtractRows(j, i, _Coefficients[j, i], i + 1, _Size);
+						SubtractRows(j, i, _Coefficients[j, i], i + 1, _AdjustedSize);
 					}
 				}
 			}
@@ -116,7 +192,7 @@ namespace CSharpEnhanced.Maths
 			private void BackwardsElimination()
 			{
 				// Starting from the bottom for each row
-				for (int i = _Size - 1; i >= 0; --i)
+				for (int i = _AdjustedSize - 1; i >= 0; --i)
 				{
 					// Choose a coefficient that would result in a 0 in each entry above the entry on the main diagonal
 					// and subtract free terms only (no need to modify matrix of coefficients - increased efficiency)
@@ -169,7 +245,7 @@ namespace CSharpEnhanced.Maths
 				var divider = _Coefficients[row, row];
 				
 				// Divide each element in the row by it
-				for (int i = row; i < _Size; ++i)
+				for (int i = row; i < _AdjustedSize; ++i)
 				{
 					_Coefficients[row, i] /= divider;
 				}
@@ -189,7 +265,7 @@ namespace CSharpEnhanced.Maths
 				int greatestMagnitude = row;
 
 				// For each row below
-				for(int i= row + 1; i<_Size; ++i)
+				for(int i= row + 1; i< _AdjustedSize; ++i)
 				{
 					// If it has a greater magnitude
 					if(_Coefficients[i, row].Magnitude > _Coefficients[greatestMagnitude, row].Magnitude)
@@ -226,7 +302,7 @@ namespace CSharpEnhanced.Maths
 				_FreeTerms[row2] = temp;
 
 				// Swap the coefficients column by column
-				for (int i=0; i<_Size; ++i)
+				for (int i=0; i< _AdjustedSize; ++i)
 				{
 					temp = _Coefficients[row1,i];
 					_Coefficients[row1,i] = _Coefficients[row2,i];
@@ -240,17 +316,45 @@ namespace CSharpEnhanced.Maths
 			}
 
 			/// <summary>
+			/// Swaps two columns
+			/// </summary>
+			/// <param name="column1"></param>
+			/// <param name="column2"></param>
+			private void SwapColumns(int column1, int column2)
+			{
+				// Swap the coefficients column by column
+				for (int i = 0; i < _AdjustedSize; ++i)
+				{
+					var temp = _Coefficients[i, column1];
+					_Coefficients[i, column1] = _Coefficients[i, column2];
+					_Coefficients[i, column2] = temp;
+				}
+
+				// Remember about the column swap
+				_ColumnSwaps.Add(new Tuple<int, int>(column1, column2));
+			}
+
+			/// <summary>
 			/// Returns a vector of results in a standard (rising) order (x0, x1, x2...)
 			/// </summary>
 			/// <returns></returns>
 			private Complex[] GetStandardVariableOrderResult()
-			{
+			{				
 				Complex[] result = new Complex[_Size];
-
+				
+				// Adjust for the row swaps
 				for(int i=0; i<_Size; ++i)
 				{
 					result[_Variables[i]] = _FreeTerms[_Variables[i]];
 				}
+
+				// And for the column swaps
+				_ColumnSwaps.ForEach((swap) =>
+				{
+					var temp = result[swap.Item1];
+					result[swap.Item1] = result[swap.Item2];
+					result[swap.Item2] = temp;
+				});
 
 				return result;
 			}

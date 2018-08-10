@@ -14,6 +14,11 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
+			var result = LinearEquations.SimplifiedGaussJordanElimination(
+				new Complex[,] { { 1, 2, 0, 1, 0, 1 }, { 1, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0 }, { 2, 1, 0, 0, 0, 0 } },
+				new Complex[] { 0, 0, 0, 5 , 0, 4}, true); 
+
+
 			string s = "5uV";
 
 			var ss = SIHelpers.ParseSIString(s);
