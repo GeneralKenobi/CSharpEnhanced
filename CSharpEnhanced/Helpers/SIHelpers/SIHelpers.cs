@@ -299,9 +299,8 @@ namespace CSharpEnhanced.Helpers
 			{
 				return "0" + unit;
 			}
-
-			// Start with an open bracket
-			string result = "(";
+						
+			string result = string.Empty;
 
 			// If real part is not 0
 			if(value.Real != 0)
@@ -322,10 +321,13 @@ namespace CSharpEnhanced.Helpers
 
 				// Add the imaginary part as string to the result with the imaginary unit
 				result += value.Imaginary.ToString() + (imaginaryAsJ ? "j" : "i");
+
+				// Wrap the whole thing in brackets
+				result = "(" + result + ")";
 			}
 
-			// Finish it off with a closign bracket and the unit + prefix
-			result += ")" + (useFullName ? prefix.Name : prefix.Symbol) + unit;
+			// Finish it off with unit + prefix
+			result += (useFullName ? prefix.Name : prefix.Symbol) + unit;
 
 			return result;
 		}
