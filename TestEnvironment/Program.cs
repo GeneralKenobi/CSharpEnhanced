@@ -16,7 +16,7 @@ namespace TestEnvironment
 		static void Main(string[] args)
 		{
 			var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
-
+			
 			x.Add("Test");
 			x[0] = "Another test";
 			x.RemoveAt(0);

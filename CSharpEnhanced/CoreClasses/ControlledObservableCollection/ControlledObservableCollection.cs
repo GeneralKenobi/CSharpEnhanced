@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CSharpEnhanced.CoreClasses
@@ -89,6 +90,51 @@ namespace CSharpEnhanced.CoreClasses
 			ItemsAdded(new List<T>(this.Except(_ControlArchive)));
 		}
 
+		/// <summary>
+		/// Moves the items in the control archive
+		/// </summary>
+		/// <param name="oldIndex"></param>
+		/// <param name="newIndex"></param>
+		private void ItemsMoved(int oldIndex, int newIndex)
+		{
+			// Get the moved item
+			var movedItem = _ControlArchive[oldIndex];
+
+			// Remove it
+			_ControlArchive.RemoveAt(oldIndex);
+
+			// And add it at the new index
+			_ControlArchive.Insert(newIndex, movedItem);
+		}
+
+		/// <summary>
+		/// Checks the integrity of this collection (if the underlying collection is equal to <see cref="_ControlArchive"/>)
+		/// Dedicated for debug
+		/// </summary>
+		[Conditional("DEBUG")]
+		private void CheckIntegrity()
+		{
+			// Check the count
+			if (this.Count == _ControlArchive.Count)
+			{
+				// For each element
+				for (int i = 0; i < this.Count; ++i)
+				{
+					// If one pair isn't equal signal it
+					if (!this[i].Equals(_ControlArchive[i]) && Debugger.IsAttached)
+					{
+						// Collection integrity compromised - pair of items wasn't equal
+						throw new Exception("Collection integrity compromised");
+					}
+				}
+			}
+			else if (Debugger.IsAttached)
+			{
+				// Collection integrity compromised - _ControlArchive has a different number of items than underlying collection
+				throw new Exception("Collection integrity compromised");
+			}
+		}
+
 		#endregion
 
 		#region Protected methods
@@ -126,7 +172,16 @@ namespace CSharpEnhanced.CoreClasses
 						CollectionReset();
 					}
 					break;
+
+				case NotifyCollectionChangedAction.Move:
+					{
+						ItemsMoved(e.OldStartingIndex, e.NewStartingIndex);
+					}
+					break;
 			}
+
+			// If debug - check integrity
+			CheckIntegrity();
 
 			// Invoke the base method
 			base.OnCollectionChanged(e);
