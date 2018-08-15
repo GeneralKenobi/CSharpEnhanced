@@ -1,4 +1,5 @@
-﻿using CSharpEnhanced.Helpers;
+﻿using CSharpEnhanced.CoreClasses;
+using CSharpEnhanced.Helpers;
 using CSharpEnhanced.Maths;
 using CSharpEnhanced.Synchronization;
 using System;
@@ -14,21 +15,35 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			var result = LinearEquations.SimplifiedGaussJordanElimination(
-				new Complex[,] { { 1, 2, 0, 1, 0, 1 }, { 1, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0 }, { 2, 1, 0, 0, 0, 0 } },
-				new Complex[] { 0, 0, 0, 5 , 0, 4}, true); 
+			var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
+
+			x.Add("Test");
+			x[0] = "Another test";
+			x.RemoveAt(0);
+
+			x.Add("Test1");
+			x.Add("Test2");
+			x.Add("Test3");
+
+			x.Move(0, 2);
+
+			x.Clear();
+
+			//var result = LinearEquations.SimplifiedGaussJordanElimination(
+			//	new Complex[,] { { 1, 2, 0, 1, 0, 1 }, { 1, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0 }, { 2, 1, 0, 0, 0, 0 } },
+			//	new Complex[] { 0, 0, 0, 5 , 0, 4}, true); 
 
 
-			string s = "5uV";
+			//string s = "5uV";
 
-			var ss = SIHelpers.ParseSIString(s);
-			
-			Complex c = new Complex(0, 0);
-			Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "V"));
-			c = new Complex(-21000, 220);
-			Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
-			c = new Complex(-21000, 0);
-			Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
+			//var ss = SIHelpers.ParseSIString(s);
+
+			//Complex c = new Complex(0, 0);
+			//Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "V"));
+			//c = new Complex(-21000, 220);
+			//Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
+			//c = new Complex(-21000, 0);
+			//Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
 			//double d = 0.010000001;
 			//double d1 = 10.00002000004;
 			//double d2 = 9.99997000009;
