@@ -14,18 +14,18 @@ namespace CSharpEnhanced.CoreClasses
 		None = 0,
 
 		/// <summary>
-		/// Shift key
-		/// </summary>
-		Shift = 1,
-
-		/// <summary>
 		/// Ctrl key
 		/// </summary>
-		Ctrl = 2,
+		Ctrl = 1,
 
 		/// <summary>
 		/// Alt key
 		/// </summary>
-		Alt = 4
+		Alt = 2,
+
+		/// <summary>
+		/// Shift key
+		/// </summary>
+		Shift = 4,
     }
 }
