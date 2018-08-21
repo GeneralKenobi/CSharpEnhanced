@@ -15,19 +15,21 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
+			Console.WriteLine(SIHelpers.ToSIString(new Complex(Math.PI * 10000, Math.PI * 1000), "V", 4));
+
+			//var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
 			
-			x.Add("Test");
-			x[0] = "Another test";
-			x.RemoveAt(0);
+			//x.Add("Test");
+			//x[0] = "Another test";
+			//x.RemoveAt(0);
 
-			x.Add("Test1");
-			x.Add("Test2");
-			x.Add("Test3");
+			//x.Add("Test1");
+			//x.Add("Test2");
+			//x.Add("Test3");
 
-			x.Move(0, 2);
+			//x.Move(0, 2);
 
-			x.Clear();
+			//x.Clear();
 
 			//var result = LinearEquations.SimplifiedGaussJordanElimination(
 			//	new Complex[,] { { 1, 2, 0, 1, 0, 1 }, { 1, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0 }, { 2, 1, 0, 0, 0, 0 } },
