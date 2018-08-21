@@ -280,8 +280,8 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="useFullName"></param>
 		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
-		public static string ToAltSIStringExcludingSmallPrefixes(Complex value, string unit, bool useFullName = false,
-			int roundToDigit = 0, MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool imaginaryAsJ = false) =>
+		public static string ToAltSIStringExcludingSmallPrefixes(Complex value, string unit, int roundToDigit = 0,
+			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false, bool imaginaryAsJ = false) =>
 			// Get the closes prefix
 			ToAltSIString(value, unit, GetClosestPrefixExcludingSmall(value), roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
 
@@ -294,8 +294,8 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="useFullName"></param>
 		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
-		public static string ToAltSIString(Complex value, string unit, bool useFullName = false, int roundToDigit = 0,
-			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool imaginaryAsJ = false) =>
+		public static string ToAltSIString(Complex value, string unit, int roundToDigit = 0,
+			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false, bool imaginaryAsJ = false) =>
 			// Get the closest prefix
 			ToAltSIString(value, unit, GetClosestPrefix(value), roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
 
