@@ -212,7 +212,7 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="roundToDigit">Digit to round the value to. If it's smaller than or equal to 0, no rounding will be done</param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, int roundToDigit,
+		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closes prefix
 			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), roundToDigit, midpointRounding,useFullName);
