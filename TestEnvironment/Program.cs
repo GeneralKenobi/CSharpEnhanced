@@ -15,6 +15,14 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
+			IEnumerable<string> en = new string[] { "Test1", "Test2" };
+			en = en.Concat("Test3");
+			foreach(var item in en)
+			{
+				Console.WriteLine(item);
+			}
+
+
 			Console.WriteLine(SIHelpers.ToSIString(new Complex(Math.PI * 10000, Math.PI * 1000), "V", 4));
 
 			//var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
