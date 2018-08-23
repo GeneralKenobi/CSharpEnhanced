@@ -12,7 +12,7 @@
 		/// Copies contents of <paramref name="obj"/> to this object
 		/// </summary>
 		/// <returns></returns>
-		void CopyFrom(T obj);
+		void Copy(T obj);
 
 		#endregion
 	}
