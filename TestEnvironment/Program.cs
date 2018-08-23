@@ -15,12 +15,15 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			IEnumerable<string> en = new string[] { "Test1", "Test2" };
+			IEnumerable<string> enn = new string[] { "Test1", "Test2" };
+			var en = enn;
 			en = en.Concat("Test3");
-			foreach(var item in en)
+			foreach(var item in enn)
 			{
 				Console.WriteLine(item);
 			}
+
+
 
 
 			Console.WriteLine(SIHelpers.ToSIString(new Complex(Math.PI * 10000, Math.PI * 1000), "V", 4));
