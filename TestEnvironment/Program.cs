@@ -15,21 +15,37 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			IEnumerable<string> enn = new string[] { "Test1", "Test2" };
-			var en = enn;
-			en = en.Concat("Test3");
-			foreach(var item in enn)
-			{
-				Console.WriteLine(item);
-			}
+			double val = -9.9998;
+
+			//while(true)
+			Console.WriteLine(val.RoundToDigit(4));
 
 
 
 
-			Console.WriteLine(SIHelpers.ToSIString(new Complex(Math.PI * 10000, Math.PI * 1000), "V", 4));
+
+
+
+
+
+
+
+
+			//IEnumerable<string> enn = new string[] { "Test1", "Test2" };
+			//var en = enn;
+			//en = en.Concat("Test3");
+			//foreach(var item in enn)
+			//{
+			//	Console.WriteLine(item);
+			//}
+
+
+
+
+			//Console.WriteLine(SIHelpers.ToSIString(new Complex(Math.PI * 10000, Math.PI * 1000), "V", 4));
 
 			//var x = new ControlledObservableCollection<string>((y) => Console.WriteLine("Added " + y), (y) => Console.WriteLine("Removed " + y));
-			
+
 			//x.Add("Test");
 			//x[0] = "Another test";
 			//x.RemoveAt(0);
@@ -57,19 +73,19 @@ namespace TestEnvironment
 			//Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
 			//c = new Complex(-21000, 0);
 			//Console.WriteLine(SIHelpers.ToAltSIStringExcludingSmallPrefixes(c, "Volts", true, true));
-			//double d = 0.010000001;
-			//double d1 = 10.00002000004;
-			//double d2 = 9.99997000009;
-			//double d3 = 0.00999997000009;
-			//double d4 = 100;
-			//double d5 = 0.1;
+			double d = 0.010000001;
+			double d1 = 10.00002000004;
+			double d2 = 9.99997000009;
+			double d3 = 0.00999997000009;
+			double d4 = 100;
+			double d5 = 0.1;
 			//
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d, 4));
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d1, 4));
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d2, 4));
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d3, 4));
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d4, 4));
-			//Console.WriteLine(MathsHelpers.RoundToDigit(d5, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d1, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d2, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d3, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d4, 4));
+			Console.WriteLine(MathsHelpers.RoundToDigit(d5, 4));
 
 
 
