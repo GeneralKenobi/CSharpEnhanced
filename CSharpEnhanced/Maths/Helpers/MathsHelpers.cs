@@ -219,6 +219,100 @@ namespace CSharpEnhanced.Maths
 
 		#endregion
 
+		#region Casting
+
+		/// <summary>
+		/// Tries to cast value to each numeral type. If it succeeds returns it as double. Otherwise returns exception;
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
+		/// <exception cref="InvalidCastException"></exception>
+		public static double CastToDouble(object value)
+		{
+			if(TryCastToDouble(value, out var result))
+			{
+				return result;
+			}
+
+			throw new InvalidCastException();
+		}
+
+		/// <summary>
+		/// Tries to cast value to each numeral type. If it succeeds, assigns it to <paramref name="result"/> and returns true.
+		/// Otherwise returns false;
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
+		public static bool TryCastToDouble(object value, out double result)
+		{
+			if (value is sbyte sb)
+			{
+				result = sb;
+				return true;
+			}
+
+			if (value is byte b)
+			{
+				result = b;
+				return true;
+			}
+
+			if (value is short s)
+			{
+				result = s;
+				return true;
+			}
+
+			if (value is ushort us)
+			{
+				result = us;
+				return true;
+			}
+
+			if (value is int i)
+			{
+				result = i;
+				return true;
+			}
+
+			if (value is uint ui)
+			{
+				result = ui;
+				return true;
+			}
+
+			if (value is long l)
+			{
+				result = l;
+				return true;
+			}
+
+			if (value is ulong ul)
+			{
+				result = ul;
+				return true;
+			}
+
+			if (value is float f)
+			{
+				result = f;
+				return true;
+			}
+
+			if (value is double d)
+			{
+				result = d;
+				return true;
+			}
+
+			result = 0;
+			return false;
+		}
+
+		#endregion
+
 		#endregion
 	}
 }
