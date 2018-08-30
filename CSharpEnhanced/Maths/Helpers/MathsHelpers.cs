@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace CSharpEnhanced.Maths
@@ -8,6 +10,31 @@ namespace CSharpEnhanced.Maths
 	/// </summary>
 	public static class MathsHelpers
     {
+		#region Private static methods
+
+		/// <summary>
+		/// Helper of <see cref="CalculateMidPoints(double, double, int)"/>, <paramref name="pointsCount"/> is assumed to be
+		/// greater than 1. Returns <paramref name="pointsCount"/> number of evenly spaced points between <paramref name="first"/> and
+		/// <paramref name="last"/> (first is <paramref name="first"/> and last is <paramref name="last"/>)
+		/// </summary>
+		/// <param name="first"></param>
+		/// <param name="last"></param>
+		/// <param name="pointsCount"></param>
+		/// <returns></returns>
+		private static IEnumerable<double> CalculateMidPointsHelper(double first, double last, int pointsCount)
+		{
+			// Get the step between two subsequent points
+			var step = (last - first) / (pointsCount - 1);
+
+			// Start at first and then add i times the step
+			for(int i=0; i<pointsCount; ++i)
+			{
+				yield return first + i * step;
+			}
+		}
+
+		#endregion
+
 		#region Public static methods
 
 		#region Angle reduction
@@ -309,6 +336,54 @@ namespace CSharpEnhanced.Maths
 
 			result = 0;
 			return false;
+		}
+
+		#endregion
+
+		#region Data set related
+
+		/// <summary>
+		/// Returns <paramref name="pointsCount"/> number of evenly spaced points between <paramref name="first"/> and
+		/// <paramref name="last"/> (first is <paramref name="first"/> and last is <paramref name="last"/>).
+		/// For <paramref name="pointsCount"/> smaller than 0 throws an exception, for <paramref name="pointsCount"/> equal to 0
+		/// returns empty enumeration, for <paramref name="pointsCount"/> equal to 1 returns the <paramref name="first"/> if it's
+		/// equal to <paramref name="last"/>, otherwise throws an exception.
+		/// </summary>
+		/// <param name="first"></param>
+		/// <param name="last"></param>
+		/// <param name="pointsCount"></param>
+		/// <returns></returns>
+		public static IEnumerable<double> CalculateMidPoints(double first, double last, int pointsCount)
+		{
+			// Number of points cannot be negative
+			if(pointsCount < 0)
+			{
+				throw new ArgumentException(nameof(pointsCount) + " can't be smaller than 0");
+			}
+
+			// For no points return an empty enumeration
+			if(pointsCount == 0)
+			{
+				return Enumerable.Empty<double>();
+			}
+						
+			if(pointsCount == 1)
+			{
+				// If both points are identical return that value
+				if(first == last)
+				{
+					return new double[] { first };
+				}
+				// Otherwise the result cannot be computed
+				else
+				{
+					throw new ArgumentException(
+						"If " + nameof(pointsCount) + " is 1 then " + nameof(first) + " has to be equal to " + nameof(last));
+				}
+			}
+
+			// In case of 2 or more points, use the helper method
+			return CalculateMidPointsHelper(first, last, pointsCount);
 		}
 
 		#endregion

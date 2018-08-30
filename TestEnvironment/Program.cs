@@ -15,21 +15,18 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			double val = -9.9998;
-
-			//while(true)
-			Console.WriteLine(val.RoundToDigit(4));
-
-
+			var a = MathsHelpers.CalculateMidPoints(0, 5, 5);
+			var b = MathsHelpers.CalculateMidPoints(1, 1, 1);
+			var c = MathsHelpers.CalculateMidPoints(1, 1, 0);
+			var dd = MathsHelpers.CalculateMidPoints(1, 2, -1);
 
 
 
 
+			//double val = -9.9998;
 
-
-
-
-
+			////while(true)
+			//Console.WriteLine(val.RoundToDigit(4));
 
 			//IEnumerable<string> enn = new string[] { "Test1", "Test2" };
 			//var en = enn;
