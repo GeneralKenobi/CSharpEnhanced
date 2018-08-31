@@ -173,10 +173,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="roundToDigit">Digit to round the value to. If it's smaller than or equal to 0, no rounding will be done</param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIString(double value, string unit, int roundToDigit = 0,
+		public static string ToSIString(double value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closest prefix
-			ToSIString(value, unit, GetClosestPrefix(value), roundToDigit, midpointRounding, useFullName);
+			ToSIString(value, GetClosestPrefix(value), unit, roundToDigit, midpointRounding, useFullName);
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the given prefix
@@ -187,7 +187,7 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="roundToDigit">Digit to round the value to. If it's smaller than or equal to 0, no rounding will be done</param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIString(double value, string unit, SIPrefix prefix, int roundToDigit = 0,
+		public static string ToSIString(double value, SIPrefix prefix, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false)
 		{
 			// Modify the value to match it
@@ -212,10 +212,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="roundToDigit">Digit to round the value to. If it's smaller than or equal to 0, no rounding will be done</param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIStringExcludingSmallPrefixes(double value, string unit, int roundToDigit = 0,
+		public static string ToSIStringExcludingSmallPrefixes(double value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closes prefix
-			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), roundToDigit, midpointRounding,useFullName);
+			ToSIString(value, GetClosestPrefixExcludingSmall(value), unit, roundToDigit, midpointRounding,useFullName);
 
 		#endregion
 
@@ -229,10 +229,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIStringExcludingSmallPrefixes(Complex value, string unit, int roundToDigit = 0,
+		public static string ToSIStringExcludingSmallPrefixes(Complex value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closes prefix
-			ToSIString(value, unit, GetClosestPrefixExcludingSmall(value), roundToDigit, midpointRounding, useFullName);
+			ToSIString(value, GetClosestPrefixExcludingSmall(value), unit, roundToDigit, midpointRounding, useFullName);
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the most fitting prefix
@@ -241,10 +241,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="unit"></param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIString(Complex value, string unit, int roundToDigit = 0,
+		public static string ToSIString(Complex value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closest prefix
-			ToSIString(value, unit, GetClosestPrefix(value), roundToDigit, midpointRounding, useFullName);
+			ToSIString(value, GetClosestPrefix(value), unit, roundToDigit, midpointRounding, useFullName);
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the given prefix
@@ -254,7 +254,7 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="prefix"></param>
 		/// <param name="useFullName"></param>
 		/// <returns></returns>
-		public static string ToSIString(Complex value, string unit, SIPrefix prefix, int roundToDigit = 0,
+		public static string ToSIString(Complex value, SIPrefix prefix, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false)
 		{
 			// Modify the value to match it
@@ -280,10 +280,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="useFullName"></param>
 		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
-		public static string ToAltSIStringExcludingSmallPrefixes(Complex value, string unit, int roundToDigit = 0,
+		public static string ToAltSIStringExcludingSmallPrefixes(Complex value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false, bool imaginaryAsJ = false) =>
 			// Get the closes prefix
-			ToAltSIString(value, unit, GetClosestPrefixExcludingSmall(value), roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
+			ToAltSIString(value, GetClosestPrefixExcludingSmall(value), unit, roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the most fitting prefix. Alternative number complex number
@@ -294,10 +294,10 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="useFullName"></param>
 		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
-		public static string ToAltSIString(Complex value, string unit, int roundToDigit = 0,
+		public static string ToAltSIString(Complex value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false, bool imaginaryAsJ = false) =>
 			// Get the closest prefix
-			ToAltSIString(value, unit, GetClosestPrefix(value), roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
+			ToAltSIString(value, GetClosestPrefix(value), unit, roundToDigit, midpointRounding, useFullName, imaginaryAsJ);
 
 		/// <summary>
 		/// Returns a string representation with SI unit included with the given prefix. Alternative number complex number string
@@ -309,7 +309,7 @@ namespace CSharpEnhanced.Helpers
 		/// <param name="useFullName"></param>
 		/// <param name="imaginaryAsJ">If true, "j" is used as imaginary unit instead of "i"</param>
 		/// <returns></returns>
-		public static string ToAltSIString(Complex value, string unit, SIPrefix prefix, int roundToDigit = 0,
+		public static string ToAltSIString(Complex value, SIPrefix prefix, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false, bool imaginaryAsJ = false)
 		{
 			// Modify the value to match it
