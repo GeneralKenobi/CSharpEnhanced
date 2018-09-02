@@ -43,7 +43,7 @@ namespace CSharpEnhanced.Maths
 		/// Reduces unnecessary turns so that the angle is in the first turn. Returns the corrected value
 		/// </summary>
 		/// <param name="angle">Angle to reduce</param>
-		/// <param name="unit">unit the angle is denoted in, default is radians</param>
+		/// <param name="unit">Unit the angle is denoted in, default is radians</param>
 		/// <returns></returns>
 		public static double ReduceAngle(double angle, AngleUnit unit = AngleUnit.Radians)
 		{
@@ -86,6 +86,56 @@ namespace CSharpEnhanced.Maths
 				// For a single turn
 				return angle;
 			}
+		}
+
+		/// <summary>
+		/// Converts an angle value from one unit to another
+		/// </summary>
+		/// <param name="angle">Angle to reduce</param>
+		/// <param name="angleUnit">Unit the angle is currently in</param>
+		/// <param name="targetUnit">Unit to which convert the angle value to</param>
+		/// <returns></returns>
+		public static double ConvertAngle(double angle, AngleUnit angleUnit, AngleUnit targetUnit)
+		{
+			// If the target units are identical just return the value
+			if(angleUnit == targetUnit)
+			{
+				return angle;
+			}
+
+			// Convert the angle to turns (if the angle is already in turns no conversion is needed)
+			switch (angleUnit)
+			{
+				case AngleUnit.Radians:
+					{
+						angle /= 2 * Math.PI;
+					}
+					break;
+
+				case AngleUnit.Degrees:
+					{
+						angle /= 360;
+					}
+					break;
+			}
+
+			// Convert the angle to target unit (if the target is turns then no additional conversion is required)
+			switch (targetUnit)
+			{
+				case AngleUnit.Radians:
+					{
+						angle *= 2 * Math.PI;
+					}
+					break;
+
+				case AngleUnit.Degrees:
+					{
+						angle *= 360;
+					}
+					break;
+			}
+
+			return angle;
 		}
 
 		#endregion

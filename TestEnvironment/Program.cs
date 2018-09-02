@@ -15,10 +15,31 @@ namespace TestEnvironment
     {
 		static void Main(string[] args)
 		{
-			var a = MathsHelpers.CalculateMidPoints(0, 5, 5);
-			var b = MathsHelpers.CalculateMidPoints(1, 1, 1);
-			var c = MathsHelpers.CalculateMidPoints(1, 1, 0);
-			var dd = MathsHelpers.CalculateMidPoints(1, 2, -1);
+
+			double a = 180;
+			double a1 = MathsHelpers.ConvertAngle(a, AngleUnit.Degrees, AngleUnit.Radians);
+			double a2 = MathsHelpers.ConvertAngle(a, AngleUnit.Degrees, AngleUnit.Turns);
+			double a3 = MathsHelpers.ConvertAngle(a, AngleUnit.Degrees, AngleUnit.Degrees);
+			a = Math.PI;
+			double a4 = MathsHelpers.ConvertAngle(a, AngleUnit.Radians, AngleUnit.Degrees);
+			double a5 = MathsHelpers.ConvertAngle(a, AngleUnit.Radians, AngleUnit.Turns);
+			double a6 = MathsHelpers.ConvertAngle(a, AngleUnit.Radians, AngleUnit.Radians);
+			a = 0.5;
+			double a7 = MathsHelpers.ConvertAngle(a, AngleUnit.Turns, AngleUnit.Degrees);
+			double a8 = MathsHelpers.ConvertAngle(a, AngleUnit.Turns, AngleUnit.Degrees);
+			double a9 = MathsHelpers.ConvertAngle(a, AngleUnit.Turns, AngleUnit.Turns);
+
+
+
+
+
+
+
+
+			//var a = MathsHelpers.CalculateMidPoints(0, 5, 5);
+			//var b = MathsHelpers.CalculateMidPoints(1, 1, 1);
+			//var c = MathsHelpers.CalculateMidPoints(1, 1, 0);
+			//var dd = MathsHelpers.CalculateMidPoints(1, 2, -1);
 
 
 
