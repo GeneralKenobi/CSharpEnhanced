@@ -34,8 +34,14 @@ namespace CSharpEnhanced.CoreClasses
 		/// <typeparam name="T"></typeparam>
 		/// <param name="action"></param>
 		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
 		public TypeSwitch StrictCase<T>(Action<T> action)
 		{
+			if(action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
 			_StrictlyMatchingActions.Add(typeof(T), (x) => action((T)x));
 			return this;
 		}
@@ -48,8 +54,14 @@ namespace CSharpEnhanced.CoreClasses
 		/// <typeparam name="T"></typeparam>
 		/// <param name="action"></param>
 		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
 		public TypeSwitch LazyCase<T>(Action<T> action)
 		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
 			_LazyMatchingActions.Add(typeof(T), (x) => action((T)x));
 			return this;
 		}
@@ -59,13 +71,21 @@ namespace CSharpEnhanced.CoreClasses
 		/// used as a key for that action.
 		/// </summary>
 		/// <param name="obj"></param>
-		public void Switch(object obj) =>
+		/// <exception cref="ArgumentNullException"></exception>
+		public void Switch(object obj)
+		{
+			if (obj == null)
+			{
+				throw new ArgumentNullException(nameof(obj));
+			}
+
 			// Get the strictly matching types (use equality comparator)
 			_StrictlyMatchingActions.Where((x) => obj.GetType() == x.Key).
 			// Concat them with lazily matching types (those that obj's type can be assigned to)
 			Concat(_LazyMatchingActions.Where((x) => x.Key.IsAssignableFrom(obj.GetType()))).
 			// And perform each resulting action
 			ForEach((x) => x.Value(obj));
+		}
 
 		#endregion
 	}
