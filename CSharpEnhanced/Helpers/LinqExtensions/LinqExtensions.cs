@@ -60,6 +60,16 @@ namespace CSharpEnhanced.Helpers
 			enumeration.Where((x) => predicates.All((predicate) => predicate(x)));
 
 		/// <summary>
+		/// Filters a sequence to elements for which all of <paramref name="predicates"/> return true.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="enumeration"></param>
+		/// <param name="predicates"></param>
+		/// <returns></returns>
+		public static IEnumerable<T> WhereAll<T>(this IEnumerable<T> enumeration, IEnumerable<Predicate<T>> predicates) =>
+			enumeration.WhereAll(predicates.ToArray());
+
+		/// <summary>
 		/// Filters a sequence to elements for which any of <paramref name="predicates"/> return true.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
@@ -68,6 +78,16 @@ namespace CSharpEnhanced.Helpers
 		/// <returns></returns>
 		public static IEnumerable<T> WhereAny<T>(this IEnumerable<T> enumeration, params Predicate<T>[] predicates) =>
 			enumeration.Where((x) => predicates.Any((predicate) => predicate(x)));
+
+		/// <summary>
+		/// Filters a sequence to elements for which any of <paramref name="predicates"/> return true.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="enumeration"></param>
+		/// <param name="predicates"></param>
+		/// <returns></returns>
+		public static IEnumerable<T> WhereAny<T>(this IEnumerable<T> enumeration, IEnumerable<Predicate<T>> predicates) =>
+			enumeration.WhereAny(predicates.ToArray());
 
 		/// <summary>
 		/// Filters a sequence to elements for which <paramref name="predicate"/> return true.
