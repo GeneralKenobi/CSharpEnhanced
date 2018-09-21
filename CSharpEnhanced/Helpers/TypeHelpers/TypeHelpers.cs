@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CSharpEnhanced.Helpers
 {
 	/// <summary>
 	/// Class containing methods related to types
 	/// </summary>
-    public static class TypeHelpers
+	public static class TypeHelpers
     {
+		#region Public static methods
+
 		/// <summary>
 		/// Returns true if <paramref name="toCheck"/> either derives from <paramref name="baseType"/> or is <paramref name="baseType"/>
 		/// </summary>
@@ -74,5 +74,17 @@ namespace CSharpEnhanced.Helpers
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Returns true if the type can be constructed without using any parameters (for example using <see cref="Activator"/>).
+		/// Checks whether the type is not an interface or is not abstract and if it has a parameterless constructor.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public static bool CanBeConstructedWithoutParameters(this Type type) =>
+			// Check if there's a parameterless constructor and if the type is not abstract or an interface
+			type.GetConstructor(Type.EmptyTypes) != null && !(type.IsAbstract || type.IsInterface);
+
+		#endregion
 	}
 }
