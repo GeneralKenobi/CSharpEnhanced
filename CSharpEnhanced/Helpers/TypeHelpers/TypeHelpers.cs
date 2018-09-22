@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace CSharpEnhanced.Helpers
 {
@@ -84,6 +85,49 @@ namespace CSharpEnhanced.Helpers
 		public static bool CanBeConstructedWithoutParameters(this Type type) =>
 			// Check if there's a parameterless constructor and if the type is not abstract or an interface
 			type.GetConstructor(Type.EmptyTypes) != null && !(type.IsAbstract || type.IsInterface);
+
+		/// <summary>
+		/// Tries to get property from some type, returns true if successful and assigns the value to <paramref name="property"/>,
+		/// returns false if unsuccessful and assigns null to <paramref name="property"/>.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public static bool TryGetProperty(this Type type, string propertyName, out PropertyInfo property)
+		{
+			// Get the property
+			property = type.GetProperty(propertyName);
+
+			// The action was successful if it did not return null
+			return property != null;
+		}
+
+		/// <summary>
+		/// Tries to get property from some type, returns true if successful and assigns the value to <paramref name="property"/>,
+		/// returns false if unsuccessful and assigns null to <paramref name="property"/>. If the property has a type different than
+		/// <typeparamref name="T"/> the action will be considered unsuccessful.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="property"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public static bool TryGetProperty<T>(this Type type, string propertyName, out PropertyInfo property)
+		{
+			// Get the property
+			property = type.GetProperty(propertyName);
+
+			// Check if types match
+			if(property?.PropertyType != typeof(T))
+			{
+				// If not, assign null to property (action was unsuccessful)
+				property = null;
+			}
+
+			// The action was successful if it did not return null
+			return property != null;
+		}
 
 		#endregion
 	}
