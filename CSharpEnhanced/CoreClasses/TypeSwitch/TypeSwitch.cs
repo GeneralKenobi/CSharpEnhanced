@@ -105,7 +105,7 @@ namespace CSharpEnhanced.CoreClasses
 		/// <summary>
 		/// Constructs a new <see cref="TypeSwitch"/>
 		/// </summary>
-		public static TypeSwitch Construct => new TypeSwitch();
+		public static TypeSwitch Construct() => new TypeSwitch();
 
 		#endregion
 	}
