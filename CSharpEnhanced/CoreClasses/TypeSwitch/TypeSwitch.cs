@@ -72,7 +72,7 @@ namespace CSharpEnhanced.CoreClasses
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public void Switch(object obj)
+		public TypeSwitch Switch(object obj)
 		{
 			if (obj == null)
 			{
@@ -85,6 +85,8 @@ namespace CSharpEnhanced.CoreClasses
 			Concat(_LazyMatchingActions.Where((x) => x.Key.IsAssignableFrom(obj.GetType()))).
 			// And perform each resulting action
 			ForEach((x) => x.Value(obj));
+
+			return this;
 		}
 
 		#endregion
