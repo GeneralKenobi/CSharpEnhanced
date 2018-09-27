@@ -10,6 +10,15 @@ namespace CSharpEnhanced.CoreClasses
 	/// </summary>
 	public class TypeSwitch
 	{
+		#region Constructors
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		private TypeSwitch() { }
+
+		#endregion
+
 		#region Private properties
 
 		/// <summary>
@@ -88,6 +97,15 @@ namespace CSharpEnhanced.CoreClasses
 
 			return this;
 		}
+
+		#endregion
+
+		#region Public static methods
+
+		/// <summary>
+		/// Constructs a new <see cref="TypeSwitch"/>
+		/// </summary>
+		public static TypeSwitch Construct => new TypeSwitch();
 
 		#endregion
 	}
