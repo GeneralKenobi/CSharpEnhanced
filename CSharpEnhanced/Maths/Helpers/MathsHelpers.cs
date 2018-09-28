@@ -396,8 +396,7 @@ namespace CSharpEnhanced.Maths
 		/// Returns <paramref name="pointsCount"/> number of evenly spaced points between <paramref name="first"/> and
 		/// <paramref name="last"/> (first is <paramref name="first"/> and last is <paramref name="last"/>).
 		/// For <paramref name="pointsCount"/> smaller than 0 throws an exception, for <paramref name="pointsCount"/> equal to 0
-		/// returns empty enumeration, for <paramref name="pointsCount"/> equal to 1 returns the <paramref name="first"/> if it's
-		/// equal to <paramref name="last"/>, otherwise throws an exception.
+		/// returns empty enumeration, for <paramref name="pointsCount"/> equal to 1 returns the center point.
 		/// </summary>
 		/// <param name="first"></param>
 		/// <param name="last"></param>
@@ -419,17 +418,8 @@ namespace CSharpEnhanced.Maths
 						
 			if(pointsCount == 1)
 			{
-				// If both points are identical return that value
-				if(first == last)
-				{
-					return new double[] { first };
-				}
-				// Otherwise the result cannot be computed
-				else
-				{
-					throw new ArgumentException(
-						"If " + nameof(pointsCount) + " is 1 then " + nameof(first) + " has to be equal to " + nameof(last));
-				}
+				// If both points are identical return the midpoint
+				return new double[] { (last + first) / 2 };
 			}
 
 			// In case of 2 or more points, use the helper method
