@@ -129,6 +129,40 @@ namespace CSharpEnhanced.Helpers
 			return property != null;
 		}
 
+		/// <summary>
+		/// Tries to get a type with the given name by calling <see cref="Type.GetType(string)"/>. If that does not succeed,
+		/// gets all loaded assemblies from <see cref="AppDomain.GetAssemblies"/> method and tries to get the type from each by
+		/// calling <see cref="Assembly.GetType(string)"/> method.
+		/// </summary>
+		/// <param name="name">Full name of the type (with namespace)</param>
+		/// <returns></returns>
+		public static Type GetType(string name)
+		{
+			// First try to get the type in a quick, naive way
+			var result = Type.GetType(name);
+
+			// Return it if that method was successful
+			if(result != null)
+			{
+				return result;
+			}
+			
+			// Otherwise loop through each assembly in AppDomain
+			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				// Try to get the type
+				result = assembly.GetType(name);
+
+				// If successful, return it
+				if (result != null)
+				{
+					return result;
+				}
+			}
+
+			return null;
+		}
+
 		#endregion
 	}
 }
