@@ -11,7 +11,7 @@ namespace CSharpEnhanced.Helpers
 	/// Class containing helper methods connected with SI - The International System of Units
 	/// </summary>
 	public static class SIHelpers
-    {
+	{
 		#region Constructor
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace CSharpEnhanced.Helpers
 		public static SIPrefix GetClosestPrefix(double value)
 		{
 			// If the value is 0 return no prefix instead of the smallest one
-			if(value == 0)
+			if (value == 0)
 			{
 				return GetPrefix(0);
 			}
@@ -194,7 +194,7 @@ namespace CSharpEnhanced.Helpers
 			value /= Math.Pow(10, prefix.Base10Power);
 
 			// If roundToDigit is greater than 0, round the value to a specific digit
-			if(roundToDigit > 0)
+			if (roundToDigit > 0)
 			{
 				value = value.RoundToDigit(roundToDigit, midpointRounding);
 			}
@@ -215,7 +215,7 @@ namespace CSharpEnhanced.Helpers
 		public static string ToSIStringExcludingSmallPrefixes(double value, string unit = "", int roundToDigit = 0,
 			MidpointRounding midpointRounding = MidpointRounding.AwayFromZero, bool useFullName = false) =>
 			// Get the closes prefix
-			ToSIString(value, GetClosestPrefixExcludingSmall(value), unit, roundToDigit, midpointRounding,useFullName);
+			ToSIString(value, GetClosestPrefixExcludingSmall(value), unit, roundToDigit, midpointRounding, useFullName);
 
 		#endregion
 
@@ -326,21 +326,21 @@ namespace CSharpEnhanced.Helpers
 			{
 				return "0" + unit;
 			}
-						
+
 			string result = string.Empty;
 
 			// If real part is not 0
-			if(value.Real != 0)
+			if (value.Real != 0)
 			{
 				// Add its string version to the result
 				result += value.Real.ToString();
 			}
 
 			// If imaginary is not 0
-			if(value.Imaginary!=0)
+			if (value.Imaginary != 0)
 			{
 				// And it's nonnegative and the real part wasn't 0
-				if(value.Imaginary >= 0 && value.Real!=0)
+				if (value.Imaginary >= 0 && value.Real != 0)
 				{
 					// Include a plus sign
 					result += "+";
@@ -397,7 +397,7 @@ namespace CSharpEnhanced.Helpers
 		{
 			// Assign default result
 			result = 0;
-			
+
 			// Check for null
 			if (s == null)
 			{
@@ -438,13 +438,13 @@ namespace CSharpEnhanced.Helpers
 			}
 
 			// Remove everything that is after the last digit (make sure not to pass an index equal to or greater to length)
-			if(lastDigitIndex != s.Length - 1)
+			if (lastDigitIndex != s.Length - 1)
 			{
 				s = s.Remove(lastDigitIndex + 1);
 			}
-			
+
 			// Try to parse the result
-			if(double.TryParse(s, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+			if (double.TryParse(s, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
 				CultureInfo.InvariantCulture, out result))
 			{
 				// If successful, multiply the result by a 10 with proper power
@@ -455,6 +455,18 @@ namespace CSharpEnhanced.Helpers
 			// The string is not an SIString
 			return false;
 		}
+
+		#endregion
+
+		#region Extension methods
+
+		/// <summary>
+		/// Converts a number without prefix to a value usable with <paramref name="prefix"/>
+		/// </summary>
+		/// <param name="prefix"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public static double Convert(this SIPrefix prefix, double value) => value * Math.Pow(10, prefix.Base10Power);
 
 		#endregion
 
