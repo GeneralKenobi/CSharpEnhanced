@@ -50,6 +50,26 @@ namespace CSharpEnhanced.Helpers
 		}
 
 		/// <summary>
+		/// Performs a foreach loop on enumeration with the given action (enabling inline calls). Returns <paramref name="enumeration"/>.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="enumeration"></param>
+		/// <param name="action"></param>
+		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumeration, Action<T, int> action)
+		{
+			int i = 0;
+
+			foreach (var item in enumeration)
+			{
+				action(item, i);
+
+				++i;
+			}
+
+			return enumeration;
+		}
+
+		/// <summary>
 		/// Filters a sequence to elements for which all of <paramref name="predicates"/> return true.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
