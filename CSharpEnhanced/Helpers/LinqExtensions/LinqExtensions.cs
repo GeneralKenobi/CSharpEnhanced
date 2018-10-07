@@ -119,6 +119,19 @@ namespace CSharpEnhanced.Helpers
 		public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumeration, Predicate<T> predicate) =>
 			enumeration.Where((x) => predicate(x));
 
+		/// <summary>
+		/// Returns a sequence of integers from 0 to <paramref name="n"/> (excluding - last integer is <paramref name="n"/> - 1)
+		/// </summary>
+		/// <param name="n"></param>
+		/// <returns></returns>
+		public static IEnumerable<int> ToSequence(this int n)
+		{
+			for(int i=0; i<n; ++i)
+			{
+				yield return i;
+			}
+		}
+
 		#endregion
 	}
 }
