@@ -10,6 +10,62 @@ namespace CSharpEnhanced.Helpers
 	/// </summary>
 	public static class LinqExtensions
 	{
+		#region Private static methods
+
+		/// <summary>
+		/// Helper of MergeSelect methods, checks whether counts of sequences match the provided <paramref name="differentCountBehavior"/>
+		/// behavior, returns true if opertation may be performed, false if it may not be performed and an empty enumerator should be
+		/// returned.
+		/// </summary>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="s1Enum"></param>
+		/// <param name="s2Enum"></param>
+		/// <param name="s1Count"></param>
+		/// <param name="s2Count"></param>
+		/// <param name="differentCountBehavior"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		private static bool MergeSelectCountCheck(IEnumerator s1Enum, IEnumerator s2Enum, int s1Count, int s2Count,
+			DifferentCountBehavior differentCountBehavior)
+		{
+			// Check whether count is correct, if not take appropriate action
+			if (s1Count != s2Count)
+			{
+				switch (differentCountBehavior)
+				{
+					case DifferentCountBehavior.ThrowException:
+						{
+							throw new ArgumentException("Sequences must have the same elements count");
+						}
+
+					case DifferentCountBehavior.ReturnEmpty:
+						{
+							return false;
+						}
+
+					// Adjust the enumerator of the longer sequence so that enumeration will end for both sequences at the same time
+					case DifferentCountBehavior.TakeEndingOfLonger:
+						{
+							if (s1Count > s2Count)
+							{
+								s1Enum.MoveNext(s1Count - s2Count);
+							}
+							else
+							{
+								s2Enum.MoveNext(s2Count - s1Count);
+							}
+						}
+						break;
+				}
+			}
+
+			return true;
+		}
+
+		#endregion
+
 		#region Public static methods
 
 		/// <summary>
@@ -158,39 +214,57 @@ namespace CSharpEnhanced.Helpers
 			var s1Enum = s1.GetEnumerator();
 			var s2Enum = s2.GetEnumerator();
 
-			// Get counts
-			var s1Count = s1.Count();
-			var s2Count = s2.Count();
-
 			// Check whether count is correct, if not take appropriate action
-			if (s1Count != s2Count)
+			if(!MergeSelectCountCheck(s1Enum, s2Enum, s1.Count(), s2.Count(), differentCountBehavior))
 			{
-				switch(differentCountBehavior)
-				{
-					case DifferentCountBehavior.ThrowException:
-						throw new ArgumentException("Sequences must have the same elements count");
-
-					case DifferentCountBehavior.ReturnEmpty: yield break;
-
-					// Adjust the enumerator of the longer sequence so that enumeration will end for both sequences at the same time
-					case DifferentCountBehavior.TakeEndingOfLonger:
-						{
-							if(s1Count > s2Count)
-							{
-								s1Enum.MoveNext(s1Count - s2Count);
-							}
-							else
-							{
-								s2Enum.MoveNext(s2Count - s1Count);
-							}
-						} break;
-				}
+				yield break;
 			}
 
 			// Go through each pair, return the result of the func on each
 			while(s1Enum.MoveNext() && s2Enum.MoveNext())
 			{
 				yield return selectFunc(s1Enum.Current, s2Enum.Current);
+			}
+		}
+
+		/// <summary>
+		/// Projects two sequences into one sequence. Uses <paramref name="selectFunc"/> to transform pairs of elements (one element
+		/// is taken from <paramref name="s1"/> and one is taken from <paramref name="s2"/>) into a single element. Provides an
+		/// iterating variable to the func.
+		/// </summary>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="s1"></param>
+		/// <param name="s2"></param>
+		/// <param name="selectFunc"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public static IEnumerable<TResult> MergeSelect<T1, T2, TResult>(this IEnumerable<T1> s1, IEnumerable<T2> s2,
+			Func<T1, T2, int, TResult> selectFunc, DifferentCountBehavior differentCountBehavior = DifferentCountBehavior.ThrowException)
+		{
+			// Check if data is correct
+			if (s1 == null) throw new ArgumentNullException(nameof(s1));
+			if (s2 == null) throw new ArgumentNullException(nameof(s2));
+			if (selectFunc == null) throw new ArgumentNullException(nameof(selectFunc));
+
+			// Get enumerators
+			var s1Enum = s1.GetEnumerator();
+			var s2Enum = s2.GetEnumerator();
+
+			// Check whether count is correct, if not take appropriate action
+			if (!MergeSelectCountCheck(s1Enum, s2Enum, s1.Count(), s2.Count(), differentCountBehavior))
+			{
+				yield break;
+			}
+
+			int i = 0;
+
+			// Go through each pair, return the result of the func on each
+			while (s1Enum.MoveNext() && s2Enum.MoveNext())
+			{
+				yield return selectFunc(s1Enum.Current, s2Enum.Current, i++);
 			}
 		}
 
