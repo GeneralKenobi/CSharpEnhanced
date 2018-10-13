@@ -132,6 +132,39 @@ namespace CSharpEnhanced.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Projects two sequences into one sequence. Uses <paramref name="selectFunc"/> to transform pairs of elements (one element
+		/// is taken from <paramref name="s1"/> and one is taken from <paramref name="s2"/>) into a single element.
+		/// </summary>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="s1"></param>
+		/// <param name="s2"></param>
+		/// <param name="selectFunc"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public static IEnumerable<TResult> MergeSelect<T1, T2, TResult>(this IEnumerable<T1> s1, IEnumerable<T2> s2,
+			Func<T1, T2, TResult> selectFunc)
+		{
+			// Check if data is correct
+			if (s1 == null) throw new ArgumentNullException(nameof(s1));
+			if (s2 == null) throw new ArgumentNullException(nameof(s2));
+			if (selectFunc == null) throw new ArgumentNullException(nameof(selectFunc));
+			if (s1.Count() != s2.Count()) throw new ArgumentException("Sequences must have the same elements count");
+
+			// Get enumerators
+			var s1Enum = s1.GetEnumerator();
+			var s2Enum = s2.GetEnumerator();
+
+			// Go through each pair, return the result of the func on each
+			while(s1Enum.MoveNext() && s2Enum.MoveNext())
+			{
+				yield return selectFunc(s1Enum.Current, s2Enum.Current);
+			}
+		}
+
 		#endregion
 	}
 }
