@@ -1,4 +1,6 @@
-﻿namespace CSharpEnhanced.Helpers
+﻿using System;
+
+namespace CSharpEnhanced.Helpers
 {
 	/// <summary>
 	/// Class with helper methods for arrays
@@ -6,6 +8,8 @@
 	public static class ArrayHelpers
     {
 		#region Public static methods
+
+		#region Initialization
 
 		/// <summary>
 		/// Creates a one-dimensional array of length <paramref name="length"/> and initializes it with the <paramref name="value"/>
@@ -70,6 +74,75 @@
 				}
 			}
 		}
+
+		#endregion
+
+		#region Copying to/from 2d arrays
+
+		/// <summary>
+		/// Copies vector <paramref name="source"/> into the chosen row of <paramref name="destination"/>.
+		/// Number of columns in <paramref name="destination"/> should match the length of <paramref name="source"/>.
+		/// <paramref name="rowIndex"/> should be smaller than the number of rows in <paramref name="destination"/>.
+		/// Method performs a shallow copy.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="destination"></param>
+		/// <param name="source"></param>
+		/// <param name="rowIndex">Indexing starts at 0</param>
+		/// <exception cref="ArgumentOutOfRangeException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public static void CopyRowInto<T>(this T[,] destination, T[] source, int rowIndex)
+		{
+			// Check if rowIndex does not exceed the number of rows in destination
+			if (rowIndex >= destination.GetLength(0))
+			{
+				throw new ArgumentOutOfRangeException(nameof(rowIndex));
+			}
+
+			// Check if number of columns in destination matches the number of elements in source
+			if(destination.GetLength(1) != source.Length)
+			{
+				throw new ArgumentException($"Number of columns in {nameof(destination)} does not match the length of {source}");
+			}
+
+			// Copy elements, one by one
+			for (int i = 0; i < source.Length; ++i)
+			{
+				destination[rowIndex, i] = source[i];
+			}
+		}
+
+		/// <summary>
+		/// Copies and returns a row from <paramref name="source"/>.
+		/// <paramref name="rowIndex"/> should be smaller than the number of rows in <paramref name="destination"/>.
+		/// Method performs a shallow copy.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <param name="rowIndex">Indexing starts at 0</param>
+		/// <returns>Return value is a 1d array with length equal to number of columns in <paramref name="source"/></returns>
+		public static T[] CopyRowFrom<T>(this T[,] source, int rowIndex)
+		{
+			// Check if rowIndex does not exceed the number of rows in destination
+			if (rowIndex >= source.GetLength(0))
+			{
+				throw new ArgumentOutOfRangeException(nameof(rowIndex));
+			}
+
+			// Create array for result
+			var result = new T[source.GetLength(1)];
+
+			// Copy elements into it, one by one
+			for(int i = 0; i < result.Length; ++i)
+			{
+				result[i] = source[rowIndex, i];
+			}
+
+			// Return the result
+			return result;
+		}
+
+		#endregion
 
 		#endregion
 	}
