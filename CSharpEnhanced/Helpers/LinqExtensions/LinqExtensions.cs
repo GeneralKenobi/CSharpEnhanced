@@ -91,6 +91,17 @@ namespace CSharpEnhanced.Helpers
 			items.Concat(enumeration ?? throw new ArgumentNullException(nameof(enumeration)));
 
 		/// <summary>
+		/// Concats <paramref name="items"/> with <paramref name="enumeration"/>
+		/// </summary>
+		/// <typeparam name="T">Type of enumeration</typeparam>
+		/// <param name="enumeration">Enumeration to concat to</param>
+		/// <param name="items">Items to concat</param>
+		/// <returns></returns>
+		public static IEnumerable<T> ConcatAtBeginning<T>(this IEnumerable<T> enumeration, IEnumerable<T> items) =>
+			// Check if enumeration isnt' null, cast items to IEnumerable<T> to use the linq method (otherwise recursion would occur)
+			items.Concat(enumeration ?? throw new ArgumentNullException(nameof(enumeration)));
+
+		/// <summary>
 		/// Performs a foreach loop on enumeration with the given action (enabling inline calls). Returns <paramref name="enumeration"/>.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
