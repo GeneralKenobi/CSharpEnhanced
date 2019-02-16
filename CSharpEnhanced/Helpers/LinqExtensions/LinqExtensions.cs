@@ -279,6 +279,19 @@ namespace CSharpEnhanced.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Returns true if both sequences contain exactly the same elements - both count and individual elements are the same, order is not
+		/// important.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="first"></param>
+		/// <param name="second"></param>
+		/// <returns></returns>
+		public static bool IsSequenceEqual<T>(this IEnumerable<T> first, IEnumerable<T> second) =>
+			// Sequences are equal if both first / second and second / first are empty sequences - both Any methods return false which is
+			// then negated to true. If at least one Any returns true then sum is true and final result is false.
+			!(first.Except(second).Any() || second.Except(first).Any());
+
 		#endregion
 	}
 }
