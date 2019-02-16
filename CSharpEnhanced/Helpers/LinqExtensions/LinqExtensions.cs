@@ -68,6 +68,8 @@ namespace CSharpEnhanced.Helpers
 
 		#region Public static methods
 
+		#region Concatenation
+
 		/// <summary>
 		/// Concats the <paramref name="items"/> to the <paramref name="enumeration"/>
 		/// </summary>
@@ -100,6 +102,10 @@ namespace CSharpEnhanced.Helpers
 		public static IEnumerable<T> ConcatAtBeginning<T>(this IEnumerable<T> enumeration, IEnumerable<T> items) =>
 			// Check if enumeration isnt' null, cast items to IEnumerable<T> to use the linq method (otherwise recursion would occur)
 			items.Concat(enumeration ?? throw new ArgumentNullException(nameof(enumeration)));
+
+		#endregion
+
+		#region Inline for each loop
 
 		/// <summary>
 		/// Performs a foreach loop on enumeration with the given action (enabling inline calls). Returns <paramref name="enumeration"/>.
@@ -136,6 +142,10 @@ namespace CSharpEnhanced.Helpers
 
 			return enumeration;
 		}
+
+		#endregion
+
+		#region Where methods
 
 		/// <summary>
 		/// Filters a sequence to elements for which all of <paramref name="predicates"/> return true.
@@ -187,6 +197,10 @@ namespace CSharpEnhanced.Helpers
 		public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumeration, Predicate<T> predicate) =>
 			enumeration.Where((x) => predicate(x));
 
+		#endregion
+
+		#region To sequence
+
 		/// <summary>
 		/// Returns a sequence of integers from 0 to <paramref name="n"/> (excluding - last integer is <paramref name="n"/> - 1)
 		/// </summary>
@@ -199,6 +213,10 @@ namespace CSharpEnhanced.Helpers
 				yield return i;
 			}
 		}
+
+		#endregion
+
+		#region Merge select
 
 		/// <summary>
 		/// Projects two sequences into one sequence. Uses <paramref name="selectFunc"/> to transform pairs of elements (one element
@@ -279,6 +297,10 @@ namespace CSharpEnhanced.Helpers
 			}
 		}
 
+		#endregion
+
+		#region Sequence equality comparison
+
 		/// <summary>
 		/// Returns true if both sequences contain exactly the same elements - both count and individual elements are the same, order is not
 		/// important.
@@ -291,6 +313,8 @@ namespace CSharpEnhanced.Helpers
 			// Sequences are equal if both first / second and second / first are empty sequences - both Any methods return false which is
 			// then negated to true. If at least one Any returns true then sum is true and final result is false.
 			!(first.Except(second).Any() || second.Except(first).Any());
+
+		#endregion
 
 		#endregion
 	}
