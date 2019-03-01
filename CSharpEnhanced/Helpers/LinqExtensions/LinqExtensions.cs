@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace CSharpEnhanced.Helpers
 {
@@ -313,6 +314,76 @@ namespace CSharpEnhanced.Helpers
 			// Sequences are equal if both first / second and second / first are empty sequences - both Any methods return false which is
 			// then negated to true. If at least one Any returns true then sum is true and final result is false.
 			!(first.Except(second).Any() || second.Except(first).Any());
+
+		#endregion
+
+		#region Sum and average for complex numbers
+
+		/// <summary>
+		/// Returns a complex sum of all elemenents in source
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <param name="selector"></param>
+		/// <returns></returns>
+		public static Complex Sum(this IEnumerable<Complex> source)
+		{
+			var result = Complex.Zero;
+
+			// Add each entry to source
+			foreach (var item in source)
+			{
+				result += item;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Returns a complex sum of all elemenents in source
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <returns></returns>
+		public static Complex Sum<T>(this IEnumerable<T> source, Func<T, Complex> selector) => source.Select((x) => selector(x)).Sum();
+
+		/// <summary>
+		/// Returns a complex average of all elemenents in source
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <param name="selector"></param>
+		/// <returns></returns>
+		public static Complex Average(this IEnumerable<Complex> source)
+		{
+			// Count the elements
+			var count = source.Count();
+
+			// If there are no elements, then return 0
+			if(count < 1)
+			{
+				return 0;
+			}
+
+			var result = Complex.Zero;
+
+			// Add each item
+			foreach (var item in source)
+			{
+				result += item;
+			}
+
+			// Divide by the number of elements (guaranteed to be non-zero - checked above) and return it
+			return result / count;
+		}
+
+		/// <summary>
+		/// Returns a complex average of all elemenents in source
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <returns></returns>
+		public static Complex Average<T>(this IEnumerable<T> source, Func<T, Complex> selector) => source.Select((x) => selector(x)).Average();
 
 		#endregion
 
